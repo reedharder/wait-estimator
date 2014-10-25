@@ -1,16 +1,159 @@
 {% extends 'waitestapp/base_site.html' %}
+{% load static %}
 {% block content %}
  <div class="container">
 
       <!-- Main component for a primary marketing message or call to action -->
       <div class="jumbotron">
-        <h1>Enter Capacity Data</h1>
-        <p>This application takes data about your practice and computes estimates of the wait time for different patient types and different doctors</p>
-        <p>Launch the app below and begin entering data about your staff, policies, and patient composition.</p>
-        <p>
-          <a class="btn btn-lg btn-primary" href="/waitapp-1/" role="button">Launch Wait Estimator &raquo;</a>
-        </p>
-      </div>
+        <h3>Practice Capacity</h3>
+        <p>Enter information about each staff member below, or upload as file:</p>
+		
+		<!-- Provider Addition Widget -->
+            <div class="bs-example">
+				<form class="form-inline" role="form">
+					<div class="form-group" style="max-width:200px;">
+						<label for="pname" >Provider Name</label>
+						<input  name="pname" class="form-control" placeholder="Provider Name">
+					</div>
+					<div class="form-group"  style="max-width:120px;">
+						<label >Hours Per Day</label>
+						<input  class="form-control" placeholder="Hours" style="max-width:115px;">
+					</div>
+					<div class="form-group"  style="max-width:120px;" >
+						<label >Weeks Per Year</label>
+						<input  class="form-control" style="max-width:115px;" placeholder="Weeks">
+					</div>
+					<div class="form-group" style="max-width:150px;">
+						<label>Position</label>
+						<select class="form-control" style="max-width:145px;">               
+							<option>Physician</option>
+							<option>Nurse Practitioner</option>
+							<option>Physician Assistant</option>
+						</select>
+					</div>
+					<div class="form-group" style="max-width:110px;">
+						<label>&nbsp;</label>
+						<button type="submit" class="btn btn-primary">Add Provider</button>
+					</div>
+				</form>
+			</div>
+    <br>    
+	
+	<!-- File input widget -->
+    <div class="col-lg-6 col-sm-6 col-12" id="file_input">
+        <label>Or, upload text file:</label>
+		<div class="input-group">
+			<span class="input-group-btn">
+				<span class="btn btn-primary btn-file">
+					Browse&hellip; <input type="file">
+				</span>
+			</span>
+			<input type="text" class="form-control">
+		</div>
+    </div>    
+	
 
-    </div>
+<br>
+<br>
+
+<button id="toggleTable" type="button" class="btn btn-primary">Show Table<button>
+<br>
+<table id="provTable" data-toggle="table">
+    <thead>
+        <tr>
+            <th data-field="name">Provider Name</th>
+            <th data-field="hours">Hours Per Day</th>
+            <th data-field="weeks">Weeks Per Year</th>
+			<th data-field="position">Position</th>
+        </tr>
+    </thead>
+	<tbody>
+    <tr>
+        <td>Doctor 1</td>
+        <td>8</td>
+        <td>48</td>
+		<td>Physician</td>
+    </tr>
+    <tr>
+         <td>Doctor 2</td>
+        <td>8</td>
+        <td>48</td>
+		<td>Physician</td>
+    </tr>
+    <tr>
+        <td>Doctor 3</td>
+        <td>8</td>
+        <td>50</td>
+		<td>Physician</td>
+    </tr>
+    <tr>
+        <td>Nurse 1</td>
+        <td>8</td>
+        <td>50</td>
+		<td>Nurse Practitioner</td>
+    </tr>
+    <tr>
+        <td>Assist. 1</td>
+        <td>8</td>
+        <td>50</td>
+		<td>Physician Assistant</td>
+    </tr>
+    </tbody>
+</table>
+</div>
+</div>
+ <!-- Bootstrap core JavaScript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    <script src="{% static 'js/jquery-1.11.1.min.js' %}"></script>
+    <script src="{% static 'js/bootstrap.min.js' %}"></script>
+    <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
+    <script src="{% static 'js/ie10-viewport-bug-workaround.js' %}"></script>
+<!-- script for file upload functionality -->    
+<script language="javascript">
+$(document).on('change', '.btn-file :file', function() {
+  var input = $(this),
+	  numFiles = input.get(0).files ? input.get(0).files.length : 1,
+	  label = input.val().replace(/\\/g, '/').replace(/.*\//, '');
+  input.trigger('fileselect', [numFiles, label]);
+});
+
+$(document).ready( function() {
+	$('.btn-file :file').on('fileselect', function(event, numFiles, label) {
+		
+		var input = $(this).parents('.input-group').find(':text'),
+			log = numFiles > 1 ? numFiles + ' files selected' : label;
+		
+		if( input.length ) {
+			input.val(log);
+		} else {
+			if( log ) alert(log);
+		}
+		
+	});
+});
+</script>
+
+<!-- bootstrap table script -->
+<script src="{% static 'js/bootstrap-table.min.js' %}"></script>
+
+<!-- toggle show/hide table script -->
+<script language="javascript">
+$(document).ready(function(){
+ var $table = $("#provTable");
+   
+  $("#provTable").hide();
+  $("#toggleTable").click(function(){
+    var button_name = $("#toggleTable").text();
+    if (button_name == "Show Table") {
+        $("#toggleTable").text("Hide Table") 
+    }
+    else {
+        $("#toggleTable").text("Show Table")
+    }        
+    $("#provTable").toggle();
+  });
+});
+</script>
+
 {% endblock %} 

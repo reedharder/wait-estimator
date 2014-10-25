@@ -1,12 +1,20 @@
 body {
-  min-height: 800px;
+  min-height: 1000px;
 }
 
 .navbar-static-top {
-  margin-bottom: 19px;
+  margin-bottom: 50px;
 }
 
 .jumbotron  {
-  padding: 24px 24px;
-  max-width = 70%;  
+  padding-top: 20px;
+  padding-bottom: 100px;
+  max-width=70%;
+   
 }
+
+#launch_button {
+	padding-top: 30px;
+	
+}
+
