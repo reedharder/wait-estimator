@@ -9,4 +9,8 @@ def waitapp_capacity(request):
 def waitapp_aff(request):
     return render(request, 'waitestapp/waitapp_aff.html')
 
-
+def waitapp_attr(request):
+    return render(request, 'waitestapp/waitapp_attr.html')
+    
+def waitapp_contrule(request):
+    return render(request, 'waitestapp/waitapp_contrule.html')

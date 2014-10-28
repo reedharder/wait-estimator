@@ -6,30 +6,46 @@
       <!-- Main component for a primary marketing message or call to action -->
       <div class="jumbotron">
 		<ul class="pager pull-right">
-			<li><a href="/waitapp/1/">Previous</a></li>
-			<li><a href="/waitapp/3/">Next</a></li>
+			<li><a href="/waitapp/3/">Previous</a></li>
+			<li><a href="/waitapp/5/">Next</a></li>
 		</ul>
-        <h3>Patient Affiliations</h3>
-        <p>Enter affiliation of each patient, or load affiliations as file:</p>
-		
-		<!-- Provider Addition Widget -->
-            <div class="bs-example">
-				<form id="addForm" class="form-inline" action="#" method="get" role="form">
-					<div class="form-group" style="max-width:200px;">
-						<label for="patname" >Patient Name</label>
-						<input  name="patname" class="form-control" placeholder="Patient Name">
-					</div>
-					<div class="form-group"  style="max-width:200px;">
-						<label >Primary Provider</label>
-						<input  name="provname" class="form-control" placeholder="Primary Provider" style="max-width:195px;">
-					</div>
-					
-					<div class="form-group" style="max-width:110px;">
-						<label>&nbsp;</label>
-						<button id="addAff" class="btn btn-primary">Add Affilation</button>
-					</div>
-				</form>
+        <h3>Physician Continuity Rules</h3>
+        <p>Enter rules for patient-physician continuity:</p>
+		<br>
+		<!-- Rule Form -->
+		<form>
+			<div style="padding-bottom:10px;">
+				<input type="checkbox" name="gender" value="Gender"> &nbsp;Gender:
+				<select>
+					<option>M</option>
+					<option>F</option>
+				</select>
 			</div>
+			<div style="padding-bottom:10px;">
+				<input type="checkbox" name="agerange" value="Age Range"> &nbsp;Age Range: &nbsp;
+				<input type="text" value="0-100" style="max-width:45px;">
+			</div>
+			<div style="padding-bottom:10px;">
+				<input type="checkbox" name="condrange" value="# Chronic Conditions"> &nbsp; # Conditions:
+				<input type="text" value="0-100" style="max-width:45px;">
+			</div>
+			<div style="padding-bottom:10px;">
+				<input type="checkbox" name="visit" value="Visit Type"> &nbsp; Visit Type:
+				<select style="max-width:80px;">
+					<option>Acute</option>
+					<option>Preventative</option>
+					<option>Chronic</option>
+				</select>
+			</div>
+			<div style="padding-bottom:10px;">
+				<input type="checkbox" name="continuity" value="Continuity"> &nbsp; Continuity:
+				<select "max-width:80px;">
+					<option>Share</option>
+					<option>Do Not Share</option>
+				</select>
+			</div>
+			<input type="submit" value="Add Rule">
+		</form>
     <br>    
 	
 	<!-- File input widget -->
@@ -52,46 +68,20 @@
 <button id="toggleTable" type="button" class="btn btn-primary">Show Table</button>
 <br>
 <div id="tableDiv">
-<table id="affTable">
+<table id="patTable">
     <thead>
         <tr>
 		    <th data-field="state" data-checkbox="true"></th>
-            <th data-field="patname">Patient</th>
-            <th data-field="provname">Provider</th>            
+            <th data-field="patname">Rule</th>
+            <th data-field="gender">Continuity</th>			
         </tr>
     </thead>
 	<tbody>
     <tr>
 		<td></td>
-        <td>Patient A</td>
-        <td>Doctor 1</td>        
-    </tr>
-    <tr>
-		<td></td>
-        <td>Patient B</td>
-        <td>Doctor 1</td>       
-    </tr>
-    <tr>
-		<td></td>
-        <td>Patient C</td>
-        <td>Doctor 2</td>
-        
-    </tr>
-    <tr>
-		<td></td>
-        <td>Patient D</td>
-        <td>Doctor 2</td>
-    </tr>
-    <tr>
-		<td></td>        
-        <td>Patient E</td>
-        <td>Doctor 3</td>
-    </tr>
-	<tr>
-		<td></td>        
-        <td>Patient F</td>
-        <td>Doctor 3</td>
-    </tr>
+        <td>Gender:M AND Age:0-9 AND Visit:Acute</td>
+        <td>Share</td>   	
+    </tr>    
     </tbody>
 </table>
 <button class="btn btn-default" id="remove-data" data-method="remove">
@@ -138,8 +128,8 @@ $(document).ready( function() {
 <!--table functionality and toggle show/hide table script -->
 <script language="javascript">
 //set table properties
-$('#affTable').bootstrapTable({
-    cache: false,
+$('#patTable').bootstrapTable({
+    cache: false,	
 	height: 400,
 	striped: true,
 	pagination: true,
@@ -158,7 +148,7 @@ $('#addProv').click(function () {
 	});
 	values['state']=""
 	
-	$('#affTable').bootstrapTable('append-data', {
+	$('#patTable').bootstrapTable('append-data', {
 		data: values
 	});
 	
@@ -167,12 +157,12 @@ $('#addProv').click(function () {
 
 //delete selected rows button
 $('#remove-data').click(function () {
-	var selects = $('#affTable').bootstrapTable('getSelections');
+	var selects = $('#patTable').bootstrapTable('getSelections');
 		states = $.map(selects, function (row) {
 			return row.state;
 		});
 
-	$('#affTable').bootstrapTable('remove', {
+	$('#patTable').bootstrapTable('remove', {
 		field: 'state',
 		values: states
 	});
