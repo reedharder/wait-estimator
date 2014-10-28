@@ -5,5 +5,8 @@ def home_view(request):
 
 def waitapp_capacity(request):
     return render(request, 'waitestapp/waitapp_capacity.html')
+    
+def waitapp_aff(request):
+    return render(request, 'waitestapp/waitapp_aff.html')
 
 

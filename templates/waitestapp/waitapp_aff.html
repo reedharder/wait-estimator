@@ -6,38 +6,27 @@
       <!-- Main component for a primary marketing message or call to action -->
       <div class="jumbotron">
 		<ul class="pager pull-right">
-			<li><a href="/">Previous</a></li>
-			<li><a href="/waitapp/2/">Next</a></li>
+			<li><a href="/waitapp/1/">Previous</a></li>
+			<li><a href="/waitapp/3/">Next</a></li>
 		</ul>
-        <h3>Practice Capacity</h3>
-        <p>Enter information about each staff member below, or upload as file:</p>
+        <h3>Patient Affiliations</h3>
+        <p>Enter affiliation of each patient, or load affiliations as file:</p>
 		
 		<!-- Provider Addition Widget -->
             <div class="bs-example">
 				<form id="addForm" class="form-inline" action="#" method="get" role="form">
 					<div class="form-group" style="max-width:200px;">
-						<label for="pname" >Provider Name</label>
-						<input  name="pname" class="form-control" placeholder="Provider Name">
+						<label for="patname" >Patient Name</label>
+						<input  name="patname" class="form-control" placeholder="Patient Name">
 					</div>
 					<div class="form-group"  style="max-width:120px;">
-						<label >Hours Per Day</label>
-						<input  name="hours" class="form-control" placeholder="Hours" style="max-width:115px;">
+						<label >Primary Provider</label>
+						<input  name="provname" class="form-control" placeholder="Primary Provider" style="max-width:115px;">
 					</div>
-					<div class="form-group"  style="max-width:120px;" >
-						<label >Weeks Per Year</label>
-						<input  name="weeks" class="form-control" style="max-width:115px;" placeholder="Weeks">
-					</div>
-					<div class="form-group" style="max-width:150px;">
-						<label>Position</label>
-						<select name="position" class="form-control" style="max-width:145px;">               
-							<option>Physician</option>
-							<option>Nurse Practitioner</option>
-							<option>Physician Assistant</option>
-						</select>
-					</div>
+					
 					<div class="form-group" style="max-width:110px;">
 						<label>&nbsp;</label>
-						<button id="addProv" class="btn btn-primary">Add Provider</button>
+						<button id="addAff" class="btn btn-primary">Add Affilation</button>
 					</div>
 				</form>
 			</div>
@@ -63,51 +52,45 @@
 <button id="toggleTable" type="button" class="btn btn-primary">Show Table</button>
 <br>
 <div id="tableDiv">
-<table id="provTable">
+<table id="affTable">
     <thead>
         <tr>
 		    <th data-field="state" data-checkbox="true"></th>
-            <th data-field="name">Provider Name</th>
-            <th data-field="hours">Hours Per Day</th>
-            <th data-field="weeks">Weeks Per Year</th>
-			<th data-field="position">Position</th>
+            <th data-field="patname">Patient</th>
+            <th data-field="provname">Provider</th>            
         </tr>
     </thead>
 	<tbody>
     <tr>
 		<td></td>
-        <td>Doctor 1</td>
-        <td>8</td>
-        <td>48</td>
-		<td>Physician</td>
+        <td>Patient A</td>
+        <td>Doctor 1</td>        
     </tr>
     <tr>
 		<td></td>
+        <td>Patient B</td>
+        <td>Doctor 1</td>       
+    </tr>
+    <tr>
+		<td></td>
+        <td>Patient C</td>
         <td>Doctor 2</td>
-        <td>8</td>
-        <td>48</td>
-		<td>Physician</td>
+        
     </tr>
     <tr>
 		<td></td>
+        <td>Patient D</td>
+        <td>Doctor 2</td>
+    </tr>
+    <tr>
+		<td></td>        
+        <td>Patient E</td>
         <td>Doctor 3</td>
-        <td>8</td>
-        <td>50</td>
-		<td>Physician</td>
     </tr>
-    <tr>
-		<td></td>
-        <td>Nurse 1</td>
-        <td>8</td>
-        <td>50</td>
-		<td>Nurse Practitioner</td>
-    </tr>
-    <tr>
-		<td></td>
-        <td>Assist. 1</td>
-        <td>8</td>
-        <td>50</td>
-		<td>Physician Assistant</td>
+	<tr>
+		<td></td>        
+        <td>Patient F</td>
+        <td>Doctor 3</td>
     </tr>
     </tbody>
 </table>
@@ -155,7 +138,7 @@ $(document).ready( function() {
 <!--table functionality and toggle show/hide table script -->
 <script language="javascript">
 //set table properties
-$('#provTable').bootstrapTable({
+$('#affTable').bootstrapTable({
     cache: false,
 	height: 400,
 	striped: true,
@@ -175,7 +158,7 @@ $('#addProv').click(function () {
 	});
 	values['state']=""
 	
-	$('#provTable').bootstrapTable('append-data', {
+	$('#affTable').bootstrapTable('append-data', {
 		data: values
 	});
 	
@@ -184,18 +167,17 @@ $('#addProv').click(function () {
 
 //delete selected rows button
 $('#remove-data').click(function () {
-	var selects = $('#provTable').bootstrapTable('getSelections');
+	var selects = $('#affTable').bootstrapTable('getSelections');
 		states = $.map(selects, function (row) {
 			return row.state;
 		});
 
-	$('#provTable').bootstrapTable('remove', {
+	$('#affTable').bootstrapTable('remove', {
 		field: 'state',
 		values: states
 	});
 });
 
-// show/hide table
 $(document).ready(function(){
  //var $table = $("#provTable");
    
