@@ -1,108 +1,117 @@
 {% extends 'waitestapp/base_site.html' %}
 {% load static %}
 {% block content %}
- <div class="container">
-
-      <!-- Main component for a primary marketing message or call to action -->
-      <div class="jumbotron">
-		<ul class="pager pull-right">
-			<li><a href="/waitapp/3/">Previous</a></li>
-			<li><a href="/waitapp/5/">Next</a></li>
+<div >
+	<div style="padding-right:104px; padding-bottom:20px;">
+		<ul class="nav nav-tabs pull-right">		  
+		  <li class="scenarioTab"><a href="/waitapp/scenario/1" data-toggle="tab">Scenario</a></li>		 
+		  <li class="active" ><a href="/waitapp/4" data-toggle="tab">Current Input</a></li>
 		</ul>
-        
-		<h3>Physician Continuity Rules</h3>
-        <p>Enter rules for patient-physician continuity:</p>
 		<br>
-		<!-- Rule Form -->
-		<form>
-		    <label>Default continuity strategy:</label>
-			<select>
-				<option>Share</option>
-				<option>Do Not Share</option>
-			</select>		
-		</form>
-		<br>
-		<form>
-			<div style="padding-bottom:10px;">
-				<input type="checkbox" name="gender" value="Gender"> &nbsp;Gender:
+	</div>
+	 <div class="container">
+
+		  <!-- Main component for a primary marketing message or call to action -->
+		  <div class="jumbotron">
+			<ul class="pager pull-right">
+				<li><a href="/waitapp/3/">Previous</a></li>
+				<li><a href="/waitapp/5/">Next</a></li>
+			</ul>
+			
+			<h3>Physician Continuity Rules</h3>
+			<p>Enter rules for patient-physician continuity:</p>
+			<br>
+			<!-- Rule Form -->
+			<form>
+				<label>Default continuity strategy:</label>
 				<select>
-					<option>M</option>
-					<option>F</option>
-				</select>
-			</div>
-			<div style="padding-bottom:10px;">
-				<input type="checkbox" name="agerange" value="Age Range"> &nbsp;Age Range: &nbsp;
-				<input type="text" placeholder="0-100" style="max-width:45px;">
-			</div>
-			<div style="padding-bottom:10px;">
-				<input type="checkbox" name="condrange" value="# Chronic Conditions"> &nbsp; # Conditions:
-				<input type="text" placeholder="0-100" style="max-width:45px;">
-			</div>
-			<div style="padding-bottom:10px;">
-				<input type="checkbox" name="visit" value="Visit Type"> &nbsp; Visit Type:
-				<select style="width:100px;">
-					<option>Acute</option>
-					<option>Preventative</option>
-					<option>Chronic</option>
-				</select>
-			</div>
-			<div style="padding-bottom:10px;">
-				<input type="checkbox" name="continuity" value="Continuity"> &nbsp; Continuity:
-				<select style="width:100px;">
 					<option>Share</option>
 					<option>Do Not Share</option>
-				</select>
-			</div>
+				</select>		
+			</form>
 			<br>
-			<input type="submit" value="Add Rule">
-		</form>
-    <br>    
-	
-	<!-- File input widget -->
-    <div>
-		<div id="file_input">
-			<label>Or, upload text file:</label>		
-			<div class="input-group">
-				<span class="input-group-btn">
-					<span class="btn btn-primary btn-file">
-						Browse&hellip; <input type="file">
-					</span>
-				</span>
-				<div>
-				<input type="text" class="form-control" style="width:300px">
-				&nbsp;&nbsp;
-				<button type="button" class="btn btn-primary" style="display:inline; ">Load File</button>
+			<form>
+				<div style="padding-bottom:10px;">
+					<input type="checkbox" name="gender" value="Gender"> &nbsp;Gender:
+					<select>
+						<option>M</option>
+						<option>F</option>
+					</select>
 				</div>
-			</div>			
-		</div>    
-	</div>
-	
+				<div style="padding-bottom:10px;">
+					<input type="checkbox" name="agerange" value="Age Range"> &nbsp;Age Range: &nbsp;
+					<input type="text" placeholder="0-100" style="max-width:45px;">
+				</div>
+				<div style="padding-bottom:10px;">
+					<input type="checkbox" name="condrange" value="# Chronic Conditions"> &nbsp; # Conditions:
+					<input type="text" placeholder="0-100" style="max-width:45px;">
+				</div>
+				<div style="padding-bottom:10px;">
+					<input type="checkbox" name="visit" value="Visit Type"> &nbsp; Visit Type:
+					<select style="width:100px;">
+						<option>Acute</option>
+						<option>Preventative</option>
+						<option>Chronic</option>
+					</select>
+				</div>
+				<div style="padding-bottom:10px;">
+					<input type="checkbox" name="continuity" value="Continuity"> &nbsp; Continuity:
+					<select style="width:100px;">
+						<option>Share</option>
+						<option>Do Not Share</option>
+					</select>
+				</div>
+				<br>
+				<input type="submit" value="Add Rule">
+			</form>
+		<br>    
+		
+		<!-- File input widget -->
+		<div>
+			<div id="file_input">
+				<label>Or, upload text file:</label>		
+				<div class="input-group">
+					<span class="input-group-btn">
+						<span class="btn btn-primary btn-file">
+							Browse&hellip; <input type="file">
+						</span>
+					</span>
+					<div>
+					<input type="text" class="form-control" style="width:300px">
+					&nbsp;&nbsp;
+					<button type="button" class="btn btn-primary" style="display:inline; ">Load File</button>
+					</div>
+				</div>			
+			</div>    
+		</div>
+		
 
-<br>
-<button id="toggleTable" type="button" class="btn btn-primary">Show Table</button>
-<br>
-<div id="tableDiv">
-<table id="patTable">
-    <thead>
-        <tr>
-		    <th data-field="state" data-checkbox="true"></th>
-            <th data-field="patname">Rule</th>
-            <th data-field="gender">Continuity</th>			
-        </tr>
-    </thead>
-	<tbody>
-    <tr>
-		<td></td>
-        <td>Gender:M AND Age:0-9 AND Visit:Acute</td>
-        <td>Share</td>   	
-    </tr>    
-    </tbody>
-</table>
-<button class="btn btn-default" id="remove-data" data-method="remove">
-        Clear Selected Rows
-</button>
-</div>
-</div>
+	<br>
+	<button id="toggleTable" type="button" class="btn btn-primary">Show Table</button>
+	<br>
+	<div id="tableDiv">
+	<table id="patTable">
+		<thead>
+			<tr>
+				<th data-field="state" data-checkbox="true"></th>
+				<th data-field="patname">Rule</th>
+				<th data-field="gender">Continuity</th>			
+			</tr>
+		</thead>
+		<tbody>
+		<tr>
+			<td></td>
+			<td>Gender:M AND Age:0-9 AND Visit:Acute</td>
+			<td>Share</td>   	
+		</tr>    
+		</tbody>
+	</table>
+	<button class="btn btn-default" id="remove-data" data-method="remove">
+			Clear Selected Rows
+	</button>
+	</div>
+	</div>
+	</div>
 </div>
  <!-- Bootstrap core JavaScript
     ================================================== -->

@@ -1,6 +1,14 @@
 {% extends 'waitestapp/base_site.html' %}
 {% load static %}
 {% block content %}
+<div >
+	<div style="padding-right:104px; padding-bottom:20px;">
+		<ul class="nav nav-tabs pull-right">		  
+		  <li class="scenarioTab"><a href="/waitapp/scenario/1" data-toggle="tab">Scenario</a></li>		 
+		  <li class="active" ><a href="/waitapp/2/" data-toggle="tab">Current Input</a></li>
+		</ul>
+		<br>
+	</div>
  <div class="container">
 
       <!-- Main component for a primary marketing message or call to action -->
@@ -105,6 +113,7 @@
 <button class="btn btn-default" id="remove-data" data-method="remove">
         Clear Selected Rows
 </button>
+</div>
 </div>
 </div>
 </div>

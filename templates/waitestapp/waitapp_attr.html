@@ -1,134 +1,143 @@
 {% extends 'waitestapp/base_site.html' %}
 {% load static %}
 {% block content %}
- <div class="container">
-
-      <!-- Main component -->
-      <div class="jumbotron">
-		<ul class="pager pull-right">
-			<li><a href="/waitapp/2/">Previous</a></li>
-			<li><a href="/waitapp/4/">Next</a></li>
+<div >
+	<div style="padding-right:104px; padding-bottom:20px;">
+		<ul class="nav nav-tabs pull-right">		  
+		  <li class="scenarioTab"><a href="/waitapp/scenario/1" data-toggle="tab">Scenario</a></li>		 
+		  <li class="active" ><a href="/waitapp/3" data-toggle="tab">Current Input</a></li>
 		</ul>
-        <h3>Patient Attributes</h3>
-        <p>Enter the composition of each Physician's panel, or load patient attributes as file:</p>
 		<br>
-		<!-- Provider Addition Widget -->
-		<h4>Panels</h4>
-		<label>Physician</label>
-		    <!--for each doctor, a form... -->
-            <div class="panelForm">			    
-				<form>				    
-					<label>Doctor 1:</label>
-					Panel Size: <input type="text" name="panelsize" placeholder="Enter Panel Size" />
-					Ratio M/F: <input type="text" name="malefemale" placeholder="Enter Ratio" />
-					<input type="submit" value="Save Panel"/>					
-				</form>
-			</div>
-			<div class="panelForm">			    
-				<form>				    
-					<label>Doctor 2:</label>
-					Panel Size: <input type="text" name="panelsize" placeholder="Enter Panel Size" />
-					Ratio M/F: <input type="text" name="maefemale" placeholder="Enter Ratio" />
-					<input type="submit" value="Save Panel"/>					
-				</form>
-			</div>
-			<div class="panelForm">			    
-				<form>				    
-					<label>Doctor 3:</label>
-					Panel Size: <input type="text" name="panelsize" placeholder="Enter Panel Size" />
-					Ratio M/F: <input type="text" name="maefemale" placeholder="Enter Ratio" />
-					<input type="submit" value="Save Panel"/>					
-				</form>
-			</div>
-    <br>    
-	
-	<!-- File input widget -->
-	<div>
-    <div id="file_input">
-        <label>Or, upload text file:</label>		
-		<div class="input-group">
-			<span class="input-group-btn">
-				<span class="btn btn-primary btn-file">
-					Browse&hellip; <input type="file">
-				</span>
-			</span>
-			<div>
-			<input type="text" class="form-control" style="width:300px">
-			&nbsp;&nbsp;
-			<button type="button" class="btn btn-primary" style="display:inline; ">Load File</button>
-			</div>
-		</div>
-		
-		
-    </div>    
 	</div>
+	 <div class="container">
+
+		  <!-- Main component -->
+		  <div class="jumbotron">
+			<ul class="pager pull-right">
+				<li><a href="/waitapp/2/">Previous</a></li>
+				<li><a href="/waitapp/4/">Next</a></li>
+			</ul>
+			<h3>Patient Attributes</h3>
+			<p>Enter the composition of each Physician's panel, or load patient attributes as file:</p>
+			<br>
+			<!-- Provider Addition Widget -->
+			<h4>Panels</h4>
+			<label>Physician</label>
+				<!--for each doctor, a form... -->
+				<div class="panelForm">			    
+					<form>				    
+						<label>Doctor 1:</label>
+						Panel Size: <input type="text" name="panelsize" placeholder="Enter Panel Size" />
+						Ratio M/F: <input type="text" name="malefemale" placeholder="Enter Ratio" />
+						<input type="submit" value="Save Panel"/>					
+					</form>
+				</div>
+				<div class="panelForm">			    
+					<form>				    
+						<label>Doctor 2:</label>
+						Panel Size: <input type="text" name="panelsize" placeholder="Enter Panel Size" />
+						Ratio M/F: <input type="text" name="maefemale" placeholder="Enter Ratio" />
+						<input type="submit" value="Save Panel"/>					
+					</form>
+				</div>
+				<div class="panelForm">			    
+					<form>				    
+						<label>Doctor 3:</label>
+						Panel Size: <input type="text" name="panelsize" placeholder="Enter Panel Size" />
+						Ratio M/F: <input type="text" name="maefemale" placeholder="Enter Ratio" />
+						<input type="submit" value="Save Panel"/>					
+					</form>
+				</div>
+		<br>    
+		
+		<!-- File input widget -->
+		<div>
+		<div id="file_input">
+			<label>Or, upload text file:</label>		
+			<div class="input-group">
+				<span class="input-group-btn">
+					<span class="btn btn-primary btn-file">
+						Browse&hellip; <input type="file">
+					</span>
+				</span>
+				<div>
+				<input type="text" class="form-control" style="width:300px">
+				&nbsp;&nbsp;
+				<button type="button" class="btn btn-primary" style="display:inline; ">Load File</button>
+				</div>
+			</div>
+			
+			
+		</div>    
+		</div>
 
 
-<br>
+	<br>
 
-<button id="toggleTable" type="button" class="btn btn-primary">Show Table</button>
-<br>
-<div id="tableDiv">
-<table id="patTable">
-    <thead>
-        <tr>
-		    <th data-field="state" data-checkbox="true"></th>
-            <th data-field="patname">Patient Name</th>
-            <th data-field="gender">Patient Gender</th>
-			<th data-field="age">Age</th>   
-			<th data-field="chronic">Num. Chronic Conditions</th> 
-        </tr>
-    </thead>
-	<tbody>
-    <tr>
-		<td></td>
-        <td>Patient A</td>
-        <td>M</td>        
-		<td>24</td>
-		<td>0</td>
-    </tr>
-    <tr>
-		<td></td>
-        <td>Patient B</td>
-        <td>F</td>        
-		<td>58</td>
-		<td>2</td>       
-    </tr>
-    <tr>
-		<td></td>
-        <td>Patient C</td>
-        <td>F</td>        
-		<td>12</td>
-		<td>1</td>           
-    </tr>
-    <tr>
-		<td></td>
-		<td>Patient D</td>
-        <td>M</td>        
-		<td>74</td>
-		<td>4</td>
-    </tr>
-    <tr>
-		<td></td>        
-        <td>Patient E</td>
-        <td>F</td>        
-		<td>35</td>
-		<td>2</td>
-    </tr>
-	<tr>
-		<td></td>
-		<td>Patient F</td>        
-        <td>M</td>        
-		<td>31</td>
-		<td>1</td>
-    </tr>
-    </tbody>
-</table>
-<button class="btn btn-default" id="remove-data" data-method="remove">
-        Clear Selected Rows
-</button>
-</div>
-</div>
+	<button id="toggleTable" type="button" class="btn btn-primary">Show Table</button>
+	<br>
+	<div id="tableDiv">
+	<table id="patTable">
+		<thead>
+			<tr>
+				<th data-field="state" data-checkbox="true"></th>
+				<th data-field="patname">Patient Name</th>
+				<th data-field="gender">Patient Gender</th>
+				<th data-field="age">Age</th>   
+				<th data-field="chronic">Num. Chronic Conditions</th> 
+			</tr>
+		</thead>
+		<tbody>
+		<tr>
+			<td></td>
+			<td>Patient A</td>
+			<td>M</td>        
+			<td>24</td>
+			<td>0</td>
+		</tr>
+		<tr>
+			<td></td>
+			<td>Patient B</td>
+			<td>F</td>        
+			<td>58</td>
+			<td>2</td>       
+		</tr>
+		<tr>
+			<td></td>
+			<td>Patient C</td>
+			<td>F</td>        
+			<td>12</td>
+			<td>1</td>           
+		</tr>
+		<tr>
+			<td></td>
+			<td>Patient D</td>
+			<td>M</td>        
+			<td>74</td>
+			<td>4</td>
+		</tr>
+		<tr>
+			<td></td>        
+			<td>Patient E</td>
+			<td>F</td>        
+			<td>35</td>
+			<td>2</td>
+		</tr>
+		<tr>
+			<td></td>
+			<td>Patient F</td>        
+			<td>M</td>        
+			<td>31</td>
+			<td>1</td>
+		</tr>
+		</tbody>
+	</table>
+	<button class="btn btn-default" id="remove-data" data-method="remove">
+			Clear Selected Rows
+	</button>
+	</div>
+	</div>
+	</div>
 </div>
  <!-- Bootstrap core JavaScript
     ================================================== -->

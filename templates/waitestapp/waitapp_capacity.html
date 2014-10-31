@@ -1,147 +1,157 @@
 {% extends 'waitestapp/base_site.html' %}
 {% load static %}
 {% block content %}
- <div class="container">
+<div >
+	<div style="padding-right:104px; padding-bottom:20px;">
+		<ul class="nav nav-tabs pull-right">		  
+		  <li class="scenarioTab"><a href="/waitapp/scenario/1/" data-toggle="tab">Scenario</a></li>		 
+		  <li class="active" ><a href="/waitapp/1/" data-toggle="tab">Current Input</a></li>
+		</ul>
+		<br>
+	</div>
+	<div class="container">
 
       <!-- Main component -->
-      <div class="jumbotron">
-		<ul class="pager pull-right">
-			<li><a href="/">Previous</a></li>
-			<li><a href="/waitapp/2/">Next</a></li>
-		</ul>
-        <h3>Practice Capacity</h3>
-        <p>Enter information about each staff member below, or upload as file:</p>
-		
-		<!-- Provider Addition Widget -->
-            <div class="bs-example">
-				<form id="addForm" class="form-inline" action="#" method="get" role="form">
-					<div class="form-group" style="max-width:200px;">
-						<label for="pname" >Provider Name</label>
-						<input  name="pname" class="form-control" placeholder="Provider Name">
-					</div>
-					<div class="form-group"  style="max-width:120px;">
-						<label >Hours Per Day</label>
-						<input  name="hours" class="form-control" placeholder="Hours" style="max-width:115px;">
-					</div>
-					<div class="form-group"  style="max-width:120px;" >
-						<label >Weeks Per Year</label>
-						<input  name="weeks" class="form-control" style="max-width:115px;" placeholder="Weeks">
-					</div>					
-					<div class="form-group" style="max-width:150px;">
-						<label>Position</label>
-						<select name="position" class="form-control" style="max-width:145px;">               
-							<option>Physician</option>
-							<option>Nurse Practitioner</option>
-							<option>Physician Assistant</option>
-						</select>
-					</div>
-					<div class="form-group" style="max-width:120px;">
-						<label>Team</label>
-						<select name="team" class="form-control" style="max-width:115px;">               
-							<option>No Team</option>
-							<option>Team A</option>
-							<option>Team B</option>
-						</select>
-					</div>
-					<div class="form-group" style="max-width:110px;">
-						<label>&nbsp;</label>
-						<button id="addProv" class="btn btn-primary">Add Provider</button>
-					</div>
-				</form>
-			</div>
-    <br>    
-	
-	<!-- File input widget -->
-    <div>
-		<div id="file_input">
-			<label>Or, upload text file:</label>		
-			<div class="input-group">
-				<span class="input-group-btn">
-					<span class="btn btn-primary btn-file">
-						Browse&hellip; <input type="file">
-					</span>
-				</span>
-				<div>
-				<input type="text" class="form-control" style="width:300px">
-				&nbsp;&nbsp;
-				<button type="button" class="btn btn-primary" style="display:inline; ">Load File</button>
+		<div class="jumbotron">
+			<ul class="pager pull-right">
+				<li><a href="/">Previous</a></li>
+				<li><a href="/waitapp/2/">Next</a></li>
+			</ul>
+			<h3>Practice Capacity</h3>
+			<p>Enter information about each staff member below, or upload as file:</p>
+			
+			<!-- Provider Addition Widget -->
+				<div class="bs-example">
+					<form id="addForm" class="form-inline"  role="form">
+						<div class="form-group" style="max-width:200px;">
+							<label for="pname" >Provider Name</label>
+							<input  name="pname" class="form-control" placeholder="Provider Name">
+						</div>
+						<div class="form-group"  style="max-width:120px;">
+							<label >Hours Per Day</label>
+							<input  name="hours" class="form-control" placeholder="Hours" style="max-width:115px;">
+						</div>
+						<div class="form-group"  style="max-width:120px;" >
+							<label >Weeks Per Year</label>
+							<input  name="weeks" class="form-control" style="max-width:115px;" placeholder="Weeks">
+						</div>					
+						<div class="form-group" style="max-width:150px;">
+							<label>Position</label>
+							<select name="position" class="form-control" style="max-width:145px;">               
+								<option>Physician</option>
+								<option>Nurse Practitioner</option>
+								<option>Physician Assistant</option>
+							</select>
+						</div>
+						<div class="form-group" style="max-width:120px;">
+							<label>Team</label>
+							<select name="team" class="form-control" style="max-width:115px;">               
+								<option>No Team</option>
+								<option>Team A</option>
+								<option>Team B</option>
+							</select>
+						</div>
+						<div class="form-group" style="max-width:110px;">
+							<label>&nbsp;</label>
+							<button id="addProv" class="btn btn-primary">Add Provider</button>
+						</div>
+					</form>
 				</div>
-			</div>			
-		</div>    
-	</div>  
+				<br>    
+	
+				<!-- File input widget -->
+				<div>
+					<div id="file_input">
+						<label>Or, upload text file:</label>		
+						<div class="input-group">
+							<span class="input-group-btn">
+								<span class="btn btn-primary btn-file">
+									Browse&hellip; <input type="file">
+								</span>
+							</span>
+							<div>
+							<input type="text" class="form-control" style="width:300px">
+							&nbsp;&nbsp;
+							<button type="button" class="btn btn-primary" style="display:inline; ">Load File</button>
+							</div>
+						</div>			
+					</div>    
+				</div>  
 	
 
-<br>
-<button id="toggleTable" type="button" class="btn btn-primary">Show Table</button>
-<br>
-<div id="tableDiv">
-<table id="provTable">
-    <thead>
-        <tr>
-		    <th data-field="state" data-checkbox="true"></th>
-            <th data-field="name">Provider Name</th>
-            <th data-field="hours">Hours Per Day</th>
-            <th data-field="weeks">Weeks Per Year</th>
-			<th data-field="position">Position</th>
-			<th data-field="team">Team</th>
-        </tr>
-    </thead>
-	<tbody>
-    <tr>
-		<td></td>
-        <td>Doctor 1</td>
-        <td>8</td>
-        <td>48</td>
-		<td>Physician</td>
-		<td>Team A</td>
-    </tr>
-    <tr>
-		<td></td>
-        <td>Doctor 2</td>
-        <td>8</td>
-        <td>48</td>
-		<td>Physician</td>
-		<td>Team A</td>
-    </tr>
-    <tr>
-		<td></td>
-        <td>Doctor 3</td>
-        <td>8</td>
-        <td>50</td>
-		<td>Physician</td>
-		<td>Team B</td>
-    </tr>
-    <tr>
-		<td></td>
-        <td>Nurse 1</td>
-        <td>8</td>
-        <td>50</td>
-		<td>Nurse Practitioner</td>
-		<td>Team B</td>
-    </tr>
-    <tr>
-		<td></td>
-        <td>Assist. 1</td>
-        <td>8</td>
-        <td>50</td>
-		<td>Physician Assistant</td>
-		<td>Team A</td>
-    </tr>
-    </tbody>
-</table>
-<button class="btn btn-default" id="remove-data" data-method="remove">
-        Clear Selected Rows
-</button>
-</div>
-</div>
+				<br>
+				<button id="toggleTable" type="button" class="btn btn-primary">Show Table</button>
+				<br>
+			<div id="tableDiv">
+				<table id="provTable">
+					<thead>
+						<tr>
+							<th data-field="state" data-checkbox="true"></th>
+							<th data-field="name">Provider Name</th>
+							<th data-field="hours">Hours Per Day</th>
+							<th data-field="weeks">Weeks Per Year</th>
+							<th data-field="position">Position</th>
+							<th data-field="team">Team</th>
+						</tr>
+					</thead>
+					<tbody>
+					<tr>
+						<td></td>
+						<td>Doctor 1</td>
+						<td>8</td>
+						<td>48</td>
+						<td>Physician</td>
+						<td>Team A</td>
+					</tr>
+					<tr>
+						<td></td>
+						<td>Doctor 2</td>
+						<td>8</td>
+						<td>48</td>
+						<td>Physician</td>
+						<td>Team A</td>
+					</tr>
+					<tr>
+						<td></td>
+						<td>Doctor 3</td>
+						<td>8</td>
+						<td>50</td>
+						<td>Physician</td>
+						<td>Team B</td>
+					</tr>
+					<tr>
+						<td></td>
+						<td>Nurse 1</td>
+						<td>8</td>
+						<td>50</td>
+						<td>Nurse Practitioner</td>
+						<td>Team B</td>
+					</tr>
+					<tr>
+						<td></td>
+						<td>Assist. 1</td>
+						<td>8</td>
+						<td>50</td>
+						<td>Physician Assistant</td>
+						<td>Team A</td>
+					</tr>
+					</tbody>
+				</table>
+				<button class="btn btn-default" id="remove-data" data-method="remove">
+						Clear Selected Rows
+				</button>
+			</div>
+		</div>
+	</div>
 </div>
  <!-- Bootstrap core JavaScript
     ================================================== -->
-    <!-- Placed at the end of the document so the pages load faster -->
-    <script src="{% static 'js/jquery-1.11.1.min.js' %}"></script>
-    <script src="{% static 'js/bootstrap.min.js' %}"></script>
-    <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
-    <script src="{% static 'js/ie10-viewport-bug-workaround.js' %}"></script>
+<!-- Placed at the end of the document so the pages load faster -->
+<script src="{% static 'js/jquery-1.11.1.min.js' %}"></script>
+<script src="{% static 'js/bootstrap.min.js' %}"></script>
+<!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
+<script src="{% static 'js/ie10-viewport-bug-workaround.js' %}"></script>
+<script src="{% static 'js/underscore.js' %}"></script>
 <!-- script for file upload functionality -->    
 <script language="javascript">
 $(document).on('change', '.btn-file :file', function() {
@@ -187,11 +197,13 @@ $('#provTable').bootstrapTable({
 //add to table with addProv button CURRENTLY NON FUNCTIONAL
 $('#addProv').click(function () {
 	//get form values in array
-	var values = {};
-	$.each($('#addForm').serializeArray(), function(i, field) {
-		values[field.name] = field.value;		
-	});
-	values['state']=""
+	var values = _.object($("#addForm").serializeArray().map(function(v) {return [v.name, v.value];} ))
+	//$.each($('#addForm').serializeArray(), function(i, field) {
+		//values[field.name] = field.value;		
+	//});
+	//['state']=""
+	
+	alert(values);
 	
 	$('#provTable').bootstrapTable('append-data', {
 		data: values

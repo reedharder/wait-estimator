@@ -1,69 +1,78 @@
 {% extends 'waitestapp/base_site.html' %}
 {% load static %}
 {% block content %}
- <div class="container">
-
-      <!-- Main component for a primary marketing message or call to action -->
-      <div class="jumbotron">
-		<ul class="pager pull-right">
-			<li><a href="/waitapp/5/">Previous</a></li>
-			<li><a href="/waitapp/results/">Run Simulation</a></li>
+<div >
+	<div style="padding-right:104px; padding-bottom:20px;">
+		<ul class="nav nav-tabs pull-right">		  
+		  <li class="scenarioTab"><a href="/waitapp/scenario/1" data-toggle="tab">Scenario</a></li>		 
+		  <li class="active" ><a href="/waitapp/6" data-toggle="tab">Current Input</a></li>
 		</ul>
-        
-		<h3>Patient Utilization</h3>
-        <p>Enter information about average patient utilization of services:</p>
 		<br>
-		<!-- Rule Form -->
-		<div id="utilGrid" style="display: table;">
-			<div id="utilRow1" style="display: table-row;">
-				
-					<div style="display: table-cell;"><label>Acute Visits per Patient per Year:&nbsp;&nbsp;</label></div>
-					<div style="display: table-cell;"><form><input type="number" min="0" step="1" value="1" style="width:50px;" required></form></div>
-					<div style="display: table-cell;"><label style="padding-left:8em;">Acute Visit Duration (min):&nbsp;&nbsp;</label></div>
-					<div style="display: table-cell;"><form><input type="number" min="0" step="1" value="15" style="width:50px;" required></form></div>						
-			</div>
-			<div id="utilRow2" style="display: table-row;">
-				
-					<div style="display: table-cell;"><label>Prevenative Visits per Patient per Year:&nbsp;&nbsp;</label></div>
-					<div style="display: table-cell;"><form><input type="number" min="0" step="1" value="1" style="width:50px;" required></form></div>
-					<div style="display: table-cell;"><label style="padding-left:8em;">Acute Visit Duration (min):&nbsp;&nbsp;</label></div>
-					<div style="display: table-cell;"><form><input type="number" min="0" step="1" value="15" style="width:50px;" required></form></div>										
-			</div>
-			<div id="utilRow3" style="display: table-row;">
-				
-					<div style="display: table-cell;"><label>Chronic Visits per Patient per Year&nbsp;&nbsp;</label></div>
-					<div style="display: table-cell;"><form><input type="number" min="0" step="1" value="1" style="width:50px;" required></form></div>
-					<div style="display: table-cell;"><label style="padding-left:8em;">Acute Visit Duration (min): &nbsp;&nbsp;</label></div>
-					<div style="display: table-cell;"><form><input type="number" min="0" step="1" value="15" style="width:50px;" required></form></div>												
-			</div>
-		</div>
-		
-    <br>    
-	
-	
-	
+	</div>
+	 <div class="container">
 
-<button id="toggleTable" type="button" class="btn btn-primary">Show Service Load Panel</button>
-<br>
-<div id="tableDiv">
+		  <!-- Main component for a primary marketing message or call to action -->
+		  <div class="jumbotron">
+			<ul class="pager pull-right">
+				<li><a href="/waitapp/5/">Previous</a></li>
+				<li><a href="/waitapp/results/">Run Simulation</a></li>
+			</ul>
+			
+			<h3>Patient Utilization</h3>
+			<p>Enter information about average patient utilization of services:</p>
+			<br>
+			<!-- Rule Form -->
+			<div id="utilGrid" style="display: table;">
+				<div id="utilRow1" style="display: table-row;">
+					
+						<div style="display: table-cell;"><label>Acute Visits per Patient per Year:&nbsp;&nbsp;</label></div>
+						<div style="display: table-cell;"><form><input type="number" min="0" step="1" value="1" style="width:50px;" required></form></div>
+						<div style="display: table-cell;"><label style="padding-left:8em;">Acute Visit Duration (min):&nbsp;&nbsp;</label></div>
+						<div style="display: table-cell;"><form><input type="number" min="0" step="1" value="15" style="width:50px;" required></form></div>						
+				</div>
+				<div id="utilRow2" style="display: table-row;">
+					
+						<div style="display: table-cell;"><label>Prevenative Visits per Patient per Year:&nbsp;&nbsp;</label></div>
+						<div style="display: table-cell;"><form><input type="number" min="0" step="1" value="1" style="width:50px;" required></form></div>
+						<div style="display: table-cell;"><label style="padding-left:8em;">Acute Visit Duration (min):&nbsp;&nbsp;</label></div>
+						<div style="display: table-cell;"><form><input type="number" min="0" step="1" value="15" style="width:50px;" required></form></div>										
+				</div>
+				<div id="utilRow3" style="display: table-row;">
+					
+						<div style="display: table-cell;"><label>Chronic Visits per Patient per Year&nbsp;&nbsp;</label></div>
+						<div style="display: table-cell;"><form><input type="number" min="0" step="1" value="1" style="width:50px;" required></form></div>
+						<div style="display: table-cell;"><label style="padding-left:8em;">Acute Visit Duration (min): &nbsp;&nbsp;</label></div>
+						<div style="display: table-cell;"><form><input type="number" min="0" step="1" value="15" style="width:50px;" required></form></div>												
+				</div>
+			</div>
+			
+		<br>    
+		
+		
+		
+
+	<button id="toggleTable" type="button" class="btn btn-primary">Show Service Load Panel</button>
 	<br>
-	<h4>Expected Service Load</h4>
-	<div style="display: table;">
-		<div style="display: table-row;">			
-			<div style="display: table-cell;">  <form><label>See&nbsp;</label><input type="number" min="0" max="100" step="1" value="100" style="width:50px;" required><label>&nbsp;% of acute visit requests within:&nbsp;</label></form></div><div style="display: table-cell;">
-				<form><input type="number" min="0" step="1" value="0" style="width:50px;" required><label>&nbsp;days</label> </form> </div>
-		</div>
-		<div style="display: table-row;">			
-			<div style="display: table-cell;">  <form><label>See&nbsp;</label><input type="number" min="0" max="100" step="1" value="100" style="width:50px;" required><label>&nbsp;% of preventative visit requests within:&nbsp;</label></form></div><div style="display: table-cell;">
-				<form><input type="number" min="0" step="1" value="0" style="width:50px;" required><label>&nbsp;days</label> </form> </div>
-		</div>
-		<div style="display: table-row;">			
-			<div style="display: table-cell;">  <form><label>See&nbsp;</label><input type="number" min="0" max="100" step="1" value="100" style="width:50px;" required><label>&nbsp;% of chronic visit requests within:&nbsp;</label></form></div><div style="display: table-cell;">
-				<form><input type="number" min="0" step="1" value="0" style="width:50px;" required><label>&nbsp;days</label> </form> </div>
+	<div id="tableDiv">
+		<br>
+		<h4>Expected Service Load</h4>
+		<div style="display: table;">
+			<div style="display: table-row;">			
+				<div style="display: table-cell;">  <form><label>See&nbsp;</label><input type="number" min="0" max="100" step="1" value="100" style="width:50px;" required><label>&nbsp;% of acute visit requests within:&nbsp;</label></form></div><div style="display: table-cell;">
+					<form><input type="number" min="0" step="1" value="0" style="width:50px;" required><label>&nbsp;days</label> </form> </div>
+			</div>
+			<div style="display: table-row;">			
+				<div style="display: table-cell;">  <form><label>See&nbsp;</label><input type="number" min="0" max="100" step="1" value="100" style="width:50px;" required><label>&nbsp;% of preventative visit requests within:&nbsp;</label></form></div><div style="display: table-cell;">
+					<form><input type="number" min="0" step="1" value="0" style="width:50px;" required><label>&nbsp;days</label> </form> </div>
+			</div>
+			<div style="display: table-row;">			
+				<div style="display: table-cell;">  <form><label>See&nbsp;</label><input type="number" min="0" max="100" step="1" value="100" style="width:50px;" required><label>&nbsp;% of chronic visit requests within:&nbsp;</label></form></div><div style="display: table-cell;">
+					<form><input type="number" min="0" step="1" value="0" style="width:50px;" required><label>&nbsp;days</label> </form> </div>
+			</div>
 		</div>
 	</div>
-</div>
-</div>
+	</div>
+	</div>
 </div>
  <!-- Bootstrap core JavaScript
     ================================================== -->

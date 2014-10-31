@@ -1,12 +1,20 @@
 {% extends 'waitestapp/base_site.html' %}
 {% load static %}
 {% block content %}
+<div >
+	<div style="padding-right:104px; padding-bottom:20px;">
+		<ul class="nav nav-tabs pull-right">		  
+		  <li id="scenarioTab"><a href="/waitapp/scenario/1" data-toggle="tab">Scenario</a></li>		 
+		  <li class="active" ><a href="/waitapp/results" data-toggle="tab">Current Input</a></li>
+		</ul>
+		<br>
+	</div>
  <div class="container">
-
+		
       <!-- Main component for a primary marketing message or call to action -->
       <div class="jumbotron">
 		<ul class="pager pull-right">
-			<li><a href="/waitapp/1/">Previous</a></li>			
+			<li><a href="/waitapp/6/">Previous</a></li>			
 		</ul>
         <h3>Current Simulation Results</h3>        
 		<br>
@@ -22,7 +30,7 @@
 			</form>
 			<br>
 			<div style="padding-left:25px;">
-				<label> Overall estimated wait time: <div id="overallTime"></div></label>
+				<label> Overall estimated wait time: <span id="overallTime">N/A</span></label>
 				<br><br>
 				<div id="border1" style="border:1px solid black;  padding:30px;">
 					<span><strong> For patient with </strong>
@@ -187,7 +195,7 @@
 		
 	</div>
 </div>
-
+</div>
 <!-- Bootstrap core JavaScript
 ================================================== -->
 <!-- Placed at the end of the document so the pages load faster -->
