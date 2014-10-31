@@ -1,0 +1,163 @@
+{% extends 'waitestapp/base_site.html' %}
+{% load static %}
+{% block content %}
+ <div class="container">
+
+      <!-- Main component for a primary marketing message or call to action -->
+      <div class="jumbotron">
+		<ul class="pager pull-right">
+			<li><a href="/waitapp/5/">Previous</a></li>
+			<li><a href="/waitapp/results/">Run Simulation</a></li>
+		</ul>
+        
+		<h3>Patient Utilization</h3>
+        <p>Enter information about average patient utilization of services:</p>
+		<br>
+		<!-- Rule Form -->
+		<div id="utilGrid" style="display: table;">
+			<div id="utilRow1" style="display: table-row;">
+				
+					<div style="display: table-cell;"><label>Acute Visits per Patient per Year:&nbsp;&nbsp;</label></div>
+					<div style="display: table-cell;"><form><input type="number" min="0" step="1" value="1" style="width:50px;" required></form></div>
+					<div style="display: table-cell;"><label style="padding-left:8em;">Acute Visit Duration (min):&nbsp;&nbsp;</label></div>
+					<div style="display: table-cell;"><form><input type="number" min="0" step="1" value="15" style="width:50px;" required></form></div>						
+			</div>
+			<div id="utilRow2" style="display: table-row;">
+				
+					<div style="display: table-cell;"><label>Prevenative Visits per Patient per Year:&nbsp;&nbsp;</label></div>
+					<div style="display: table-cell;"><form><input type="number" min="0" step="1" value="1" style="width:50px;" required></form></div>
+					<div style="display: table-cell;"><label style="padding-left:8em;">Acute Visit Duration (min):&nbsp;&nbsp;</label></div>
+					<div style="display: table-cell;"><form><input type="number" min="0" step="1" value="15" style="width:50px;" required></form></div>										
+			</div>
+			<div id="utilRow3" style="display: table-row;">
+				
+					<div style="display: table-cell;"><label>Chronic Visits per Patient per Year&nbsp;&nbsp;</label></div>
+					<div style="display: table-cell;"><form><input type="number" min="0" step="1" value="1" style="width:50px;" required></form></div>
+					<div style="display: table-cell;"><label style="padding-left:8em;">Acute Visit Duration (min): &nbsp;&nbsp;</label></div>
+					<div style="display: table-cell;"><form><input type="number" min="0" step="1" value="15" style="width:50px;" required></form></div>												
+			</div>
+		</div>
+		
+    <br>    
+	
+	
+	
+
+<button id="toggleTable" type="button" class="btn btn-primary">Show Service Load Panel</button>
+<br>
+<div id="tableDiv">
+	<br>
+	<h4>Expected Service Load</h4>
+	<div style="display: table;">
+		<div style="display: table-row;">			
+			<div style="display: table-cell;">  <form><label>See&nbsp;</label><input type="number" min="0" max="100" step="1" value="100" style="width:50px;" required><label>&nbsp;% of acute visit requests within:&nbsp;</label></form></div><div style="display: table-cell;">
+				<form><input type="number" min="0" step="1" value="0" style="width:50px;" required><label>&nbsp;days</label> </form> </div>
+		</div>
+		<div style="display: table-row;">			
+			<div style="display: table-cell;">  <form><label>See&nbsp;</label><input type="number" min="0" max="100" step="1" value="100" style="width:50px;" required><label>&nbsp;% of preventative visit requests within:&nbsp;</label></form></div><div style="display: table-cell;">
+				<form><input type="number" min="0" step="1" value="0" style="width:50px;" required><label>&nbsp;days</label> </form> </div>
+		</div>
+		<div style="display: table-row;">			
+			<div style="display: table-cell;">  <form><label>See&nbsp;</label><input type="number" min="0" max="100" step="1" value="100" style="width:50px;" required><label>&nbsp;% of chronic visit requests within:&nbsp;</label></form></div><div style="display: table-cell;">
+				<form><input type="number" min="0" step="1" value="0" style="width:50px;" required><label>&nbsp;days</label> </form> </div>
+		</div>
+	</div>
+</div>
+</div>
+</div>
+ <!-- Bootstrap core JavaScript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    <script src="{% static 'js/jquery-1.11.1.min.js' %}"></script>
+    <script src="{% static 'js/bootstrap.min.js' %}"></script>
+    <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
+    <script src="{% static 'js/ie10-viewport-bug-workaround.js' %}"></script>
+<!-- script for file upload functionality -->    
+<script language="javascript">
+$(document).on('change', '.btn-file :file', function() {
+  var input = $(this),
+	  numFiles = input.get(0).files ? input.get(0).files.length : 1,
+	  label = input.val().replace(/\\/g, '/').replace(/.*\//, '');
+  input.trigger('fileselect', [numFiles, label]);
+});
+
+$(document).ready( function() {
+	$('.btn-file :file').on('fileselect', function(event, numFiles, label) {
+		
+		var input = $(this).parents('.input-group').find(':text'),
+			log = numFiles > 1 ? numFiles + ' files selected' : label;
+		
+		if( input.length ) {
+			input.val(log);
+		} else {
+			if( log ) alert(log);
+		}
+		
+	});
+});
+</script>
+
+<!-- bootstrap table script -->
+<script src="{% static 'js/bootstrap-table.min.js' %}"></script>
+
+<!--table functionality and toggle show/hide table script -->
+<script language="javascript">
+//set table properties
+$('#patTable').bootstrapTable({
+    cache: false,	
+	height: 400,
+	striped: true,
+	pagination: true,
+	pageSize: 50,
+	pageList: [10, 25, 50, 100, 200],
+	search: true,	
+	clickToSelect: true,
+});
+
+//add to table with addProv button CURRENTLY NON FUNCTIONAL
+$('#addProv').click(function () {
+	//get form values in array
+	var values = {};
+	$.each($('#addForm').serializeArray(), function(i, field) {
+		values[field.name] = field.value;		
+	});
+	values['state']=""
+	
+	$('#patTable').bootstrapTable('append-data', {
+		data: values
+	});
+	
+});
+	
+
+//delete selected rows button
+$('#remove-data').click(function () {
+	var selects = $('#patTable').bootstrapTable('getSelections');
+		states = $.map(selects, function (row) {
+			return row.state;
+		});
+
+	$('#patTable').bootstrapTable('remove', {
+		field: 'state',
+		values: states
+	});
+});
+
+$(document).ready(function(){
+ //var $table = $("#provTable");
+   
+  $("#tableDiv").hide();
+  $("#toggleTable").click(function(){
+    var button_name = $("#toggleTable").text();
+    if (button_name == "Show Service Load Panel") {
+        $("#toggleTable").text("Hide Service Load Panel") 
+    }
+    else {
+        $("#toggleTable").text("Show Service Load Panel")
+    }        
+    $("#tableDiv").toggle();
+  });
+});
+</script>
+
+{% endblock %} 

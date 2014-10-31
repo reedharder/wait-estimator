@@ -1,0 +1,286 @@
+{% extends 'waitestapp/base_site.html' %}
+{% load static %}
+{% block content %}
+ <div class="container">
+
+      <!-- Main component for a primary marketing message or call to action -->
+      <div class="jumbotron">
+		<ul class="pager pull-right">
+			<li><a href="/waitapp/1/">Previous</a></li>			
+		</ul>
+        <h3>Current Simulation Results</h3>        
+		<br>
+		<div style="padding-left:25px;">
+			<form>
+				<label>Results for:</label>
+				<select>
+					<option>Overall</option>
+					<option>Doctor 1</option>
+					<option>Doctor 2</option>
+					<option>Doctor 3</option>
+				</select>		
+			</form>
+			<br>
+			<div style="padding-left:25px;">
+				<label> Overall estimated wait time: <div id="overallTime"></div></label>
+				<br><br>
+				<div id="border1" style="border:1px solid black;  padding:30px;">
+					<span><strong> For patient with </strong>
+						<select>
+									<option>0</option>
+									<option>1</option>
+									<option>2</option>
+									<option>3+</option>
+						</select> 
+						<strong>chronic conditions: </strong>
+					</span><br>
+					<div id="resultsTable">		
+						<table>
+							<thead>
+								<tr>
+									<th data-field="gender" ></th>
+									<th data-field="patname"></th>
+									<th data-field="provname"></th>   
+									<th data-field="provname"></th>
+									<th data-field="provname"></th>
+								</tr>
+							</thead>
+							<tbody>
+							 <tr>
+									<td>Gender</td>
+									<td>Age Group</td>
+									<td >Visit Type</td>   
+									<td >Est. Wait Time (days)</td>
+									<td >
+										<select>
+											<option>100% of Patients wait less than:</option>
+											<option>99% of Patients wait less than:</option>
+											<option>95% of Patients wait less than:</option>
+										</select>
+									</td>
+								</tr>
+							 <tr>
+								<td>
+									<select>
+										<option>M</option>
+										<option>F</option>
+									</select>
+								</td>
+								<td>0-24</td>
+								<td>
+									<select>
+										<option>Preventative</option>
+										<option>Acute</option>
+										<option>Chronic</option>
+									</select>
+								</td>
+								<td><div id="wait1">N/A</div></td>
+								<td><div id="percentile1">N/A</div></td>
+							</tr>
+							<tr>
+								<td>
+									<select>
+										<option>M</option>
+										<option>F</option>
+									</select>
+								</td>
+								<td>25-54</td>
+								<td>
+									<select>
+										<option>Preventative</option>
+										<option>Acute</option>
+										<option>Chronic</option>
+									</select>
+								</td>
+								<td><div id="wait2">N/A</div></td>
+								<td><div id="percentile2">N/A</div></td>
+							</tr>
+							<tr>
+								<td>
+									<select>
+										<option>M</option>
+										<option>F</option>
+									</select>
+								</td>
+								<td>55+</td>
+								<td>
+									<select>
+										<option>Preventative</option>
+										<option>Acute</option>
+										<option>Chronic</option>
+									</select>
+								</td>
+								<td><div id="wait3">N/A</div></td>
+								<td><div id="percentile3">N/A</div></td>
+							</tr>				
+							</tbody>
+						</table>
+					</div>
+				</div>
+			<br>
+			<div id="border2" style="border:1px solid black; padding:30px;">
+				<label>Make results query:</label>
+				<table id="queryGrid">
+				 <tr>
+					<td>Gender</td>
+					<td>Age Range</td> 
+					<td>Cond. Range</td>
+					<td>Visit Type</td>
+					<td></td>
+					<td>Est. Wait Time (days)</td>
+					<td>
+						<select>
+							<option>100% of Patients wait less than:</option>
+							<option>99% of Patients wait less than:</option>
+							<option>95% of Patients wait less than:</option>
+						</select>
+					</td>
+				 </tr>
+				  <tr>
+					<td>
+						<select>
+							<option>M</option>
+							<option>F</option>
+						</select>
+					</td>
+					<td>
+						<form style="height:21px;">
+							<input type="text" name="age" placeholder="0-100" style="height:20px; width:50px;">
+						</form>
+					</td>				
+					<td>
+						<select>
+							<option>0</option>
+							<option>1</option>
+							<option>2</option>
+							<option>3+</option>
+						</select>
+					</td>
+					<td>
+						<select>
+							<option>Preventative</option>
+							<option>Acute</option>
+							<option>Chronic</option>
+						</select>
+					</td>
+					<td>
+					<button id="query" style="height:30px; line-height:25px;">Submit Query</button>
+					</td>
+					<td><div id="queryEst">N/A</div></td>
+					<td><div id="queryPerc">N/A</div></td>
+				  </tr>
+				 </table>
+			</div>
+			 <br>
+			 <br>
+			<div align="right" style="padding-right:40px;">
+				<form action="/waitapp/scenario/1">
+					<input type="submit" value="Begin Modified Scenario">
+				</form>
+			</div>		
+		
+		
+		
+			</div>
+		</div>
+		
+		
+	</div>
+</div>
+
+<!-- Bootstrap core JavaScript
+================================================== -->
+<!-- Placed at the end of the document so the pages load faster -->
+<script src="{% static 'js/jquery-1.11.1.min.js' %}"></script>
+<script src="{% static 'js/bootstrap.min.js' %}"></script>
+<!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
+<script src="{% static 'js/ie10-viewport-bug-workaround.js' %}"></script>
+<!-- script for file upload functionality -->    
+<script language="javascript">
+$(document).on('change', '.btn-file :file', function() {
+  var input = $(this),
+	  numFiles = input.get(0).files ? input.get(0).files.length : 1,
+	  label = input.val().replace(/\\/g, '/').replace(/.*\//, '');
+  input.trigger('fileselect', [numFiles, label]);
+});
+
+$(document).ready( function() {
+	$('.btn-file :file').on('fileselect', function(event, numFiles, label) {
+		
+		var input = $(this).parents('.input-group').find(':text'),
+			log = numFiles > 1 ? numFiles + ' files selected' : label;
+		
+		if( input.length ) {
+			input.val(log);
+		} else {
+			if( log ) alert(log);
+		}
+		
+	});
+});
+</script>
+
+<!-- bootstrap table script -->
+<script src="{% static 'js/bootstrap-table.min.js' %}"></script>
+
+<!--table functionality and toggle show/hide table script -->
+<script language="javascript">
+//set table properties
+$('#affTable').bootstrapTable({
+    cache: false,
+	height: 400,
+	striped: true,
+	pagination: true,
+	pageSize: 50,
+	pageList: [10, 25, 50, 100, 200],
+	search: true,	
+	clickToSelect: true,
+});
+
+//add to table with addProv button CURRENTLY NON FUNCTIONAL
+$('#addProv').click(function () {
+	//get form values in array
+	var values = {};
+	$.each($('#addForm').serializeArray(), function(i, field) {
+		values[field.name] = field.value;		
+	});
+	values['state']=""
+	
+	$('#affTable').bootstrapTable('append-data', {
+		data: values
+	});
+	
+});
+	
+
+//delete selected rows button
+$('#remove-data').click(function () {
+	var selects = $('#affTable').bootstrapTable('getSelections');
+		states = $.map(selects, function (row) {
+			return row.state;
+		});
+
+	$('#affTable').bootstrapTable('remove', {
+		field: 'state',
+		values: states
+	});
+});
+
+$(document).ready(function(){
+ //var $table = $("#provTable");
+   
+  $("#tableDiv").hide();
+  $("#toggleTable").click(function(){
+    var button_name = $("#toggleTable").text();
+    if (button_name == "Show Table") {
+        $("#toggleTable").text("Hide Table") 
+    }
+    else {
+        $("#toggleTable").text("Show Table")
+    }        
+    $("#tableDiv").toggle();
+  });
+});
+</script>
+
+{% endblock %} 

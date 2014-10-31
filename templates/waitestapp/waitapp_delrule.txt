@@ -3,69 +3,68 @@
 {% block content %}
  <div class="container">
 
-      <!-- Main component -->
+      <!-- Main component for a primary marketing message or call to action -->
       <div class="jumbotron">
 		<ul class="pager pull-right">
-			<li><a href="/waitapp/2/">Previous</a></li>
-			<li><a href="/waitapp/4/">Next</a></li>
+			<li><a href="/waitapp/3/">Previous</a></li>
+			<li><a href="/waitapp/5/">Next</a></li>
 		</ul>
-        <h3>Patient Attributes</h3>
-        <p>Enter the composition of each Physician's panel, or load patient attributes as file:</p>
+        <h3>Physician Continuity Rules</h3>
+        <p>Enter rules for patient-physician continuity:</p>
 		<br>
-		<!-- Provider Addition Widget -->
-		<h4>Panels</h4>
-		<label>Physician</label>
-		    <!--for each doctor, a form... -->
-            <div class="panelForm">			    
-				<form>				    
-					<label>Doctor 1:</label>
-					Panel Size: <input type="text" name="panelsize" placeholder="Enter Panel Size" />
-					Ratio M/F: <input type="text" name="malefemale" placeholder="Enter Ratio" />
-					<input type="submit" value="Save Panel"/>					
-				</form>
+		<!-- Rule Form -->
+		<form>
+			<div style="padding-bottom:10px;">
+				<input type="checkbox" name="gender" value="Gender"> &nbsp;Gender:
+				<select>
+					<option>M</option>
+					<option>F</option>
+				</select>
 			</div>
-			<div class="panelForm">			    
-				<form>				    
-					<label>Doctor 2:</label>
-					Panel Size: <input type="text" name="panelsize" placeholder="Enter Panel Size" />
-					Ratio M/F: <input type="text" name="maefemale" placeholder="Enter Ratio" />
-					<input type="submit" value="Save Panel"/>					
-				</form>
+			<div style="padding-bottom:10px;">
+				<input type="checkbox" name="agerange" value="Age Range"> &nbsp;Age Range: &nbsp;
+				<input type="text" value="0-100" style="max-width:45px;">
 			</div>
-			<div class="panelForm">			    
-				<form>				    
-					<label>Doctor 3:</label>
-					Panel Size: <input type="text" name="panelsize" placeholder="Enter Panel Size" />
-					Ratio M/F: <input type="text" name="maefemale" placeholder="Enter Ratio" />
-					<input type="submit" value="Save Panel"/>					
-				</form>
+			<div style="padding-bottom:10px;">
+				<input type="checkbox" name="condrange" value="# Chronic Conditions"> &nbsp; # Conditions:
+				<input type="text" value="0-100" style="max-width:45px;">
 			</div>
+			<div style="padding-bottom:10px;">
+				<input type="checkbox" name="visit" value="Visit Type"> &nbsp; Visit Type:
+				<select style="max-width:80px;">
+					<option>Acute</option>
+					<option>Preventative</option>
+					<option>Chronic</option>
+				</select>
+			</div>
+			<div style="padding-bottom:10px;">
+				<input type="checkbox" name="continuity" value="Continuity"> &nbsp; Continuity:
+				<select "max-width:80px;">
+					<option>Share</option>
+					<option>Do Not Share</option>
+				</select>
+			</div>
+			<input type="submit" value="Add Rule">
+		</form>
     <br>    
 	
 	<!-- File input widget -->
-	<div>
-    <div id="file_input">
-        <label>Or, upload text file:</label>		
+    <div class="col-lg-6 col-sm-6 col-12" id="file_input">
+        <label>Or, upload text file:</label>
 		<div class="input-group">
 			<span class="input-group-btn">
 				<span class="btn btn-primary btn-file">
 					Browse&hellip; <input type="file">
 				</span>
 			</span>
-			<div>
-			<input type="text" class="form-control" style="width:300px">
-			&nbsp;&nbsp;
-			<button type="button" class="btn btn-primary" style="display:inline; ">Load File</button>
-			</div>
+			<input type="text" class="form-control">
 		</div>
-		
-		
     </div>    
-	</div>
-
+	
 
 <br>
-
+<br>
+<button type="button" class="btn btn-primary">Load File</button>
 <button id="toggleTable" type="button" class="btn btn-primary">Show Table</button>
 <br>
 <div id="tableDiv">
@@ -73,55 +72,16 @@
     <thead>
         <tr>
 		    <th data-field="state" data-checkbox="true"></th>
-            <th data-field="patname">Patient Name</th>
-            <th data-field="gender">Patient Gender</th>
-			<th data-field="age">Age</th>   
-			<th data-field="chronic">Num. Chronic Conditions</th> 
+            <th data-field="patname">Rule</th>
+            <th data-field="gender">Continuity</th>			
         </tr>
     </thead>
 	<tbody>
     <tr>
 		<td></td>
-        <td>Patient A</td>
-        <td>M</td>        
-		<td>24</td>
-		<td>0</td>
-    </tr>
-    <tr>
-		<td></td>
-        <td>Patient B</td>
-        <td>F</td>        
-		<td>58</td>
-		<td>2</td>       
-    </tr>
-    <tr>
-		<td></td>
-        <td>Patient C</td>
-        <td>F</td>        
-		<td>12</td>
-		<td>1</td>           
-    </tr>
-    <tr>
-		<td></td>
-		<td>Patient D</td>
-        <td>M</td>        
-		<td>74</td>
-		<td>4</td>
-    </tr>
-    <tr>
-		<td></td>        
-        <td>Patient E</td>
-        <td>F</td>        
-		<td>35</td>
-		<td>2</td>
-    </tr>
-	<tr>
-		<td></td>
-		<td>Patient F</td>        
-        <td>M</td>        
-		<td>31</td>
-		<td>1</td>
-    </tr>
+        <td>Gender:M AND Age:0-9 AND Visit:Acute</td>
+        <td>Share</td>   	
+    </tr>    
     </tbody>
 </table>
 <button class="btn btn-default" id="remove-data" data-method="remove">
@@ -169,7 +129,7 @@ $(document).ready( function() {
 <script language="javascript">
 //set table properties
 $('#patTable').bootstrapTable({
-    cache: false,
+    cache: false,	
 	height: 400,
 	striped: true,
 	pagination: true,

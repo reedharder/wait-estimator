@@ -6,22 +6,14 @@
       <!-- Main component for a primary marketing message or call to action -->
       <div class="jumbotron">
 		<ul class="pager pull-right">
-			<li><a href="/waitapp/3/">Previous</a></li>
-			<li><a href="/waitapp/5/">Next</a></li>
+			<li><a href="/waitapp/4/">Previous</a></li>
+			<li><a href="/waitapp/6/">Next</a></li>
 		</ul>
-        
-		<h3>Physician Continuity Rules</h3>
-        <p>Enter rules for patient-physician continuity:</p>
+        <h3>Patient Delegation Rules</h3>
+        <p>Enter rules for patient delegation to non-physician providers:</p>
 		<br>
 		<!-- Rule Form -->
-		<form>
-		    <label>Default continuity strategy:</label>
-			<select>
-				<option>Share</option>
-				<option>Do Not Share</option>
-			</select>		
-		</form>
-		<br>
+		
 		<form>
 			<div style="padding-bottom:10px;">
 				<input type="checkbox" name="gender" value="Gender"> &nbsp;Gender:
@@ -40,17 +32,21 @@
 			</div>
 			<div style="padding-bottom:10px;">
 				<input type="checkbox" name="visit" value="Visit Type"> &nbsp; Visit Type:
-				<select style="width:100px;">
+				<select style="max-width:80px;">
 					<option>Acute</option>
 					<option>Preventative</option>
 					<option>Chronic</option>
 				</select>
 			</div>
 			<div style="padding-bottom:10px;">
-				<input type="checkbox" name="continuity" value="Continuity"> &nbsp; Continuity:
+				<input type="checkbox" name="condrange" value="# Chronic Conditions"> &nbsp; Patient Name:
+				<input type="text" placeholder="Enter Patient Name" style="width:100px;">
+			</div>
+			<div style="padding-bottom:10px;">
+				<input type="checkbox" name="continuity" value="Continuity"> &nbsp; Delegation:
 				<select style="width:100px;">
-					<option>Share</option>
-					<option>Do Not Share</option>
+					<option>Nurse 1</option>
+					<option>Asst. 1</option>
 				</select>
 			</div>
 			<br>
@@ -58,8 +54,7 @@
 		</form>
     <br>    
 	
-	<!-- File input widget -->
-    <div>
+	<div>
 		<div id="file_input">
 			<label>Or, upload text file:</label>		
 			<div class="input-group">
@@ -77,7 +72,6 @@
 		</div>    
 	</div>
 	
-
 <br>
 <button id="toggleTable" type="button" class="btn btn-primary">Show Table</button>
 <br>
@@ -93,24 +87,22 @@
 	<tbody>
     <tr>
 		<td></td>
-        <td>Gender:M AND Age:0-9 AND Visit:Acute</td>
-        <td>Share</td>   	
+        <td>Gender:F AND Age:0-9 AND Visit:Acute</td>
+        <td>Nurse 1</td>   	
     </tr>    
     </tbody>
 </table>
-<button class="btn btn-default" id="remove-data" data-method="remove">
-        Clear Selected Rows
-</button>
+<button class="btn btn-default" id="remove-data" data-method="remove">Clear Selected Rows</button>
 </div>
 </div>
 </div>
  <!-- Bootstrap core JavaScript
     ================================================== -->
-    <!-- Placed at the end of the document so the pages load faster -->
-    <script src="{% static 'js/jquery-1.11.1.min.js' %}"></script>
-    <script src="{% static 'js/bootstrap.min.js' %}"></script>
-    <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
-    <script src="{% static 'js/ie10-viewport-bug-workaround.js' %}"></script>
+<!-- Placed at the end of the document so the pages load faster -->
+<script src="{% static 'js/jquery-1.11.1.min.js' %}"></script>
+<script src="{% static 'js/bootstrap.min.js' %}"></script>
+<!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
+<script src="{% static 'js/ie10-viewport-bug-workaround.js' %}"></script>
 <!-- script for file upload functionality -->    
 <script language="javascript">
 $(document).on('change', '.btn-file :file', function() {

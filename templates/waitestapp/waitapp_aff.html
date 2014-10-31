@@ -13,17 +13,21 @@
         <p>Enter affiliation of each patient, or load affiliations as file:</p>
 		
 		<!-- Provider Addition Widget -->
+		<!-- FIRST NAME, LAST NAME, DROPDOWN -->
             <div class="bs-example">
 				<form id="addForm" class="form-inline" action="#" method="get" role="form">
 					<div class="form-group" style="max-width:200px;">
 						<label for="patname" >Patient Name</label>
 						<input  name="patname" class="form-control" placeholder="Patient Name">
 					</div>
-					<div class="form-group"  style="max-width:200px;">
-						<label >Primary Provider</label>
-						<input  name="provname" class="form-control" placeholder="Primary Provider" style="max-width:195px;">
-					</div>
-					
+					<div class="form-group" style="max-width:150px;">
+						<label>Primary Provider</label>
+						<select name="position" class="form-control" style="max-width:145px;">               
+							<option>Doctor 1</option>
+							<option>Doctor 2</option>
+							<option>Doctor 3</option>
+						</select>
+					</div>				
 					<div class="form-group" style="max-width:110px;">
 						<label>&nbsp;</label>
 						<button id="addAff" class="btn btn-primary">Add Affilation</button>
@@ -33,22 +37,26 @@
     <br>    
 	
 	<!-- File input widget -->
-    <div class="col-lg-6 col-sm-6 col-12" id="file_input">
-        <label>Or, upload text file:</label>
-		<div class="input-group">
-			<span class="input-group-btn">
-				<span class="btn btn-primary btn-file">
-					Browse&hellip; <input type="file">
+    <div>
+		<div id="file_input">
+			<label>Or, upload text file:</label>		
+			<div class="input-group">
+				<span class="input-group-btn">
+					<span class="btn btn-primary btn-file">
+						Browse&hellip; <input type="file">
+					</span>
 				</span>
-			</span>
-			<input type="text" class="form-control">
-		</div>
-    </div>    
+				<div>
+				<input type="text" class="form-control" style="width:300px">
+				&nbsp;&nbsp;
+				<button type="button" class="btn btn-primary" style="display:inline; ">Load File</button>
+				</div>
+			</div>			
+		</div>    
+	</div>  
 	
 
 <br>
-<br>
-<button type="button" class="btn btn-primary">Load File</button>
 <button id="toggleTable" type="button" class="btn btn-primary">Show Table</button>
 <br>
 <div id="tableDiv">

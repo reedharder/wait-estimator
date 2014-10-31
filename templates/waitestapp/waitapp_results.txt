@@ -3,124 +3,99 @@
 {% block content %}
  <div class="container">
 
-      <!-- Main component -->
+      <!-- Main component for a primary marketing message or call to action -->
       <div class="jumbotron">
 		<ul class="pager pull-right">
-			<li><a href="/waitapp/2/">Previous</a></li>
-			<li><a href="/waitapp/4/">Next</a></li>
+			<li><a href="/waitapp/1/">Previous</a></li>
+			<li><a href="/waitapp/3/">Next</a></li>
 		</ul>
-        <h3>Patient Attributes</h3>
-        <p>Enter the composition of each Physician's panel, or load patient attributes as file:</p>
-		<br>
+        <h3>Patient Affiliations</h3>
+        <p>Enter affiliation of each patient, or load affiliations as file:</p>
+		
 		<!-- Provider Addition Widget -->
-		<h4>Panels</h4>
-		<label>Physician</label>
-		    <!--for each doctor, a form... -->
-            <div class="panelForm">			    
-				<form>				    
-					<label>Doctor 1:</label>
-					Panel Size: <input type="text" name="panelsize" placeholder="Enter Panel Size" />
-					Ratio M/F: <input type="text" name="malefemale" placeholder="Enter Ratio" />
-					<input type="submit" value="Save Panel"/>					
-				</form>
-			</div>
-			<div class="panelForm">			    
-				<form>				    
-					<label>Doctor 2:</label>
-					Panel Size: <input type="text" name="panelsize" placeholder="Enter Panel Size" />
-					Ratio M/F: <input type="text" name="maefemale" placeholder="Enter Ratio" />
-					<input type="submit" value="Save Panel"/>					
-				</form>
-			</div>
-			<div class="panelForm">			    
-				<form>				    
-					<label>Doctor 3:</label>
-					Panel Size: <input type="text" name="panelsize" placeholder="Enter Panel Size" />
-					Ratio M/F: <input type="text" name="maefemale" placeholder="Enter Ratio" />
-					<input type="submit" value="Save Panel"/>					
+		<!-- FIRST NAME, LAST NAME, DROPDOWN -->
+            <div class="bs-example">
+				<form id="addForm" class="form-inline" action="#" method="get" role="form">
+					<div class="form-group" style="max-width:200px;">
+						<label for="patname" >Patient Name</label>
+						<input  name="patname" class="form-control" placeholder="Patient Name">
+					</div>
+					<div class="form-group"  style="max-width:200px;">
+						<label >Primary Provider</label>
+						<input  name="provname" class="form-control" placeholder="Primary Provider" style="max-width:195px;">
+					</div>
+					
+					<div class="form-group" style="max-width:110px;">
+						<label>&nbsp;</label>
+						<button id="addAff" class="btn btn-primary">Add Affilation</button>
+					</div>
 				</form>
 			</div>
     <br>    
 	
 	<!-- File input widget -->
-	<div>
-    <div id="file_input">
-        <label>Or, upload text file:</label>		
-		<div class="input-group">
-			<span class="input-group-btn">
-				<span class="btn btn-primary btn-file">
-					Browse&hellip; <input type="file">
+    <div>
+		<div id="file_input">
+			<label>Or, upload text file:</label>		
+			<div class="input-group">
+				<span class="input-group-btn">
+					<span class="btn btn-primary btn-file">
+						Browse&hellip; <input type="file">
+					</span>
 				</span>
-			</span>
-			<div>
-			<input type="text" class="form-control" style="width:300px">
-			&nbsp;&nbsp;
-			<button type="button" class="btn btn-primary" style="display:inline; ">Load File</button>
-			</div>
-		</div>
-		
-		
-    </div>    
-	</div>
-
+				<div>
+				<input type="text" class="form-control" style="width:300px">
+				&nbsp;&nbsp;
+				<button type="button" class="btn btn-primary" style="display:inline; ">Load File</button>
+				</div>
+			</div>			
+		</div>    
+	</div>  
+	
 
 <br>
-
 <button id="toggleTable" type="button" class="btn btn-primary">Show Table</button>
 <br>
 <div id="tableDiv">
-<table id="patTable">
+<table id="affTable">
     <thead>
         <tr>
 		    <th data-field="state" data-checkbox="true"></th>
-            <th data-field="patname">Patient Name</th>
-            <th data-field="gender">Patient Gender</th>
-			<th data-field="age">Age</th>   
-			<th data-field="chronic">Num. Chronic Conditions</th> 
+            <th data-field="patname">Patient</th>
+            <th data-field="provname">Provider</th>            
         </tr>
     </thead>
 	<tbody>
     <tr>
 		<td></td>
         <td>Patient A</td>
-        <td>M</td>        
-		<td>24</td>
-		<td>0</td>
+        <td>Doctor 1</td>        
     </tr>
     <tr>
 		<td></td>
         <td>Patient B</td>
-        <td>F</td>        
-		<td>58</td>
-		<td>2</td>       
+        <td>Doctor 1</td>       
     </tr>
     <tr>
 		<td></td>
         <td>Patient C</td>
-        <td>F</td>        
-		<td>12</td>
-		<td>1</td>           
+        <td>Doctor 2</td>
+        
     </tr>
     <tr>
 		<td></td>
-		<td>Patient D</td>
-        <td>M</td>        
-		<td>74</td>
-		<td>4</td>
+        <td>Patient D</td>
+        <td>Doctor 2</td>
     </tr>
     <tr>
 		<td></td>        
         <td>Patient E</td>
-        <td>F</td>        
-		<td>35</td>
-		<td>2</td>
+        <td>Doctor 3</td>
     </tr>
 	<tr>
-		<td></td>
-		<td>Patient F</td>        
-        <td>M</td>        
-		<td>31</td>
-		<td>1</td>
+		<td></td>        
+        <td>Patient F</td>
+        <td>Doctor 3</td>
     </tr>
     </tbody>
 </table>
@@ -168,7 +143,7 @@ $(document).ready( function() {
 <!--table functionality and toggle show/hide table script -->
 <script language="javascript">
 //set table properties
-$('#patTable').bootstrapTable({
+$('#affTable').bootstrapTable({
     cache: false,
 	height: 400,
 	striped: true,
@@ -188,7 +163,7 @@ $('#addProv').click(function () {
 	});
 	values['state']=""
 	
-	$('#patTable').bootstrapTable('append-data', {
+	$('#affTable').bootstrapTable('append-data', {
 		data: values
 	});
 	
@@ -197,12 +172,12 @@ $('#addProv').click(function () {
 
 //delete selected rows button
 $('#remove-data').click(function () {
-	var selects = $('#patTable').bootstrapTable('getSelections');
+	var selects = $('#affTable').bootstrapTable('getSelections');
 		states = $.map(selects, function (row) {
 			return row.state;
 		});
 
-	$('#patTable').bootstrapTable('remove', {
+	$('#affTable').bootstrapTable('remove', {
 		field: 'state',
 		values: states
 	});

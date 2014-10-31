@@ -3,7 +3,7 @@
 {% block content %}
  <div class="container">
 
-      <!-- Main component for a primary marketing message or call to action -->
+      <!-- Main component -->
       <div class="jumbotron">
 		<ul class="pager pull-right">
 			<li><a href="/">Previous</a></li>
@@ -26,13 +26,21 @@
 					<div class="form-group"  style="max-width:120px;" >
 						<label >Weeks Per Year</label>
 						<input  name="weeks" class="form-control" style="max-width:115px;" placeholder="Weeks">
-					</div>
+					</div>					
 					<div class="form-group" style="max-width:150px;">
 						<label>Position</label>
 						<select name="position" class="form-control" style="max-width:145px;">               
 							<option>Physician</option>
 							<option>Nurse Practitioner</option>
 							<option>Physician Assistant</option>
+						</select>
+					</div>
+					<div class="form-group" style="max-width:120px;">
+						<label>Team</label>
+						<select name="team" class="form-control" style="max-width:115px;">               
+							<option>No Team</option>
+							<option>Team A</option>
+							<option>Team B</option>
 						</select>
 					</div>
 					<div class="form-group" style="max-width:110px;">
@@ -44,22 +52,26 @@
     <br>    
 	
 	<!-- File input widget -->
-    <div class="col-lg-6 col-sm-6 col-12" id="file_input">
-        <label>Or, upload text file:</label>
-		<div class="input-group">
-			<span class="input-group-btn">
-				<span class="btn btn-primary btn-file">
-					Browse&hellip; <input type="file">
+    <div>
+		<div id="file_input">
+			<label>Or, upload text file:</label>		
+			<div class="input-group">
+				<span class="input-group-btn">
+					<span class="btn btn-primary btn-file">
+						Browse&hellip; <input type="file">
+					</span>
 				</span>
-			</span>
-			<input type="text" class="form-control">
-		</div>
-    </div>    
+				<div>
+				<input type="text" class="form-control" style="width:300px">
+				&nbsp;&nbsp;
+				<button type="button" class="btn btn-primary" style="display:inline; ">Load File</button>
+				</div>
+			</div>			
+		</div>    
+	</div>  
 	
 
 <br>
-<br>
-<button type="button" class="btn btn-primary">Load File</button>
 <button id="toggleTable" type="button" class="btn btn-primary">Show Table</button>
 <br>
 <div id="tableDiv">
@@ -71,6 +83,7 @@
             <th data-field="hours">Hours Per Day</th>
             <th data-field="weeks">Weeks Per Year</th>
 			<th data-field="position">Position</th>
+			<th data-field="team">Team</th>
         </tr>
     </thead>
 	<tbody>
@@ -80,6 +93,7 @@
         <td>8</td>
         <td>48</td>
 		<td>Physician</td>
+		<td>Team A</td>
     </tr>
     <tr>
 		<td></td>
@@ -87,6 +101,7 @@
         <td>8</td>
         <td>48</td>
 		<td>Physician</td>
+		<td>Team A</td>
     </tr>
     <tr>
 		<td></td>
@@ -94,6 +109,7 @@
         <td>8</td>
         <td>50</td>
 		<td>Physician</td>
+		<td>Team B</td>
     </tr>
     <tr>
 		<td></td>
@@ -101,6 +117,7 @@
         <td>8</td>
         <td>50</td>
 		<td>Nurse Practitioner</td>
+		<td>Team B</td>
     </tr>
     <tr>
 		<td></td>
@@ -108,6 +125,7 @@
         <td>8</td>
         <td>50</td>
 		<td>Physician Assistant</td>
+		<td>Team A</td>
     </tr>
     </tbody>
 </table>
