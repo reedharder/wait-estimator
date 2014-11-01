@@ -4,8 +4,8 @@
 <div >
 	<div style="padding-right:104px; padding-bottom:20px;">
 		<ul class="nav nav-tabs pull-right">		  
-		  <li id="scenarioTab"><a href="/waitapp/scenario/1" >Scenario</a></li>		 
-		  <li class="active" ><a href="/waitapp/results">Current Input</a></li>
+		  <li class="active"><a href="/waitapp/scenario/results" data-toggle="tab">Scenario</a></li>		 
+		  <li ><a href="/waitapp/results" >Current Input</a></li>
 		</ul>
 		<br>
 	</div>
@@ -14,9 +14,9 @@
       <!-- Main component for a primary marketing message or call to action -->
       <div class="jumbotron">
 		<ul class="pager pull-right">
-			<li><a href="/waitapp/6/">Previous</a></li>			
+			<li><a href="/waitapp/scenario/6">Previous</a></li>			
 		</ul>
-        <h3>Current Simulation Results</h3>        
+        <h3>Scenario Simulation Results</h3>        
 		<br>
 		<div style="padding-left:25px;">
 			<form>
@@ -51,6 +51,8 @@
 									<th data-field="provname"></th>   
 									<th data-field="provname"></th>
 									<th data-field="provname"></th>
+									<th data-field="provname"></th>
+									<th data-field="provname"></th>
 								</tr>
 							</thead>
 							<tbody>
@@ -59,13 +61,15 @@
 									<td>Age Group</td>
 									<td >Visit Type</td>   
 									<td >Est. Wait Time (days)</td>
+									<td>Change from current</td>
 									<td >
 										<select>
-											<option>100% of Patients wait less than:</option>
-											<option>99% of Patients wait less than:</option>
-											<option>95% of Patients wait less than:</option>
+											<option>100% of Patients wait <:</option>
+											<option>99% of Patients wait <:</option>
+											<option>95% of Patients wait <:</option>
 										</select>
 									</td>
+									<td>Change from current</td>
 								</tr>
 							 <tr>
 								<td>
@@ -83,7 +87,9 @@
 									</select>
 								</td>
 								<td><div id="wait1">N/A</div></td>
+								<td><div id="wait1dif">N/A</div></td>
 								<td><div id="percentile1">N/A</div></td>
+								<td><div id="percentile1dif">N/A</div></td>
 							</tr>
 							<tr>
 								<td>
@@ -101,7 +107,9 @@
 									</select>
 								</td>
 								<td><div id="wait2">N/A</div></td>
+								<td><div id="wait2dif">N/A</div></td>
 								<td><div id="percentile2">N/A</div></td>
+								<td><div id="percentile2dif">N/A</div></td>
 							</tr>
 							<tr>
 								<td>
@@ -119,7 +127,9 @@
 									</select>
 								</td>
 								<td><div id="wait3">N/A</div></td>
+								<td><div id="wait3dif">N/A</div></td>
 								<td><div id="percentile3">N/A</div></td>
+								<td><div id="percentile3dif">N/A</div></td>
 							</tr>				
 							</tbody>
 						</table>
@@ -136,13 +146,15 @@
 					<td>Visit Type</td>
 					<td></td>
 					<td>Est. Wait Time (days)</td>
+					<td>Change from current</td>
 					<td>
 						<select>
-							<option>100% of Patients wait less than:</option>
-							<option>99% of Patients wait less than:</option>
-							<option>95% of Patients wait less than:</option>
+							<option>100% of Patients wait <:</option>
+							<option>99% of Patients wait <:</option>
+							<option>95% of Patients wait <:</option>
 						</select>
 					</td>
+					<td>Change from current</td>
 				 </tr>
 				  <tr>
 					<td>
@@ -172,20 +184,18 @@
 						</select>
 					</td>
 					<td>
-					<button id="query" style="height:30px; line-height:25px;">Submit Query</button>
+					<button id="query" style="height:30px; line-height:25px;">Submit</button>
 					</td>
 					<td><div id="queryEst">N/A</div></td>
+					<td><div id="queryEstDif">N/A</div></td>
 					<td><div id="queryPerc">N/A</div></td>
+					<td><div id="queryPercDif">N/A</div></td>
 				  </tr>
 				 </table>
 			</div>
 			 <br>
 			 <br>
-			<div align="right" style="padding-right:40px;">
-				<form action="/waitapp/scenario/1">
-					<input type="submit" value="Begin Modified Scenario">
-				</form>
-			</div>		
+			
 		
 		
 		

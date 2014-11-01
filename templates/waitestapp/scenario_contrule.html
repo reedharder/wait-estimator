@@ -4,8 +4,8 @@
 <div >
 	<div style="padding-right:104px; padding-bottom:20px;">
 		<ul class="nav nav-tabs pull-right">		  
-		  <!-- <li class="scenarioTab"><a href="/waitapp/scenario/1" data-toggle="tab">Scenario</a></li> -->		 
-		  <li class="active" ><a href="/waitapp/4" data-toggle="tab">Current Input</a></li>
+		  <li class="active"><a href="/waitapp/scenario/4" data-toggle="tab">Scenario</a></li>		 
+		  <li ><a href="/waitapp/results" >Current Input</a></li>
 		</ul>
 		<br>
 	</div>
@@ -14,11 +14,11 @@
 		  <!-- Main component for a primary marketing message or call to action -->
 		  <div class="jumbotron">
 			<ul class="pager pull-right">
-				<li><a href="/waitapp/3/">Previous</a></li>
-				<li><a href="/waitapp/5/">Next</a></li>
+				<li><a href="/waitapp/scenario/3/">Previous</a></li>
+				<li><a href="/waitapp/scenario/5/">Next</a></li>
 			</ul>
 			
-			<h3>Physician Continuity Rules</h3>
+			<h3>Scenario: Physician Continuity Rules</h3>
 			<p>Enter rules for patient-physician continuity:</p>
 			<br>
 			<!-- Rule Form -->
@@ -163,7 +163,7 @@ $('#contRuleTable').bootstrapTable({
 	striped: true,
 	pagination: true,
 	pageSize: 50,
-	pageList: [10, 25, 50, 100, 200],	
+	pageList: [10, 25, 50, 100, 200],		
 	clickToSelect: true,
 });
 

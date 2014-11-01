@@ -4,8 +4,8 @@
 <div >
 	<div style="padding-right:104px; padding-bottom:20px;">
 		<ul class="nav nav-tabs pull-right">		  
-		  <!-- <li class="scenarioTab"><a href="/waitapp/scenario/1" data-toggle="tab">Scenario</a></li> -->		 
-		  <li class="active" ><a href="/waitapp/4" data-toggle="tab">Current Input</a></li>
+		  <li class="active"><a href="/waitapp/scenario/5" data-toggle="tab">Scenario</a></li> 
+		  <li  ><a href="/waitapp/results">Current Input</a></li>
 		</ul>
 		<br>
 	</div>
@@ -14,65 +14,56 @@
 		  <!-- Main component for a primary marketing message or call to action -->
 		  <div class="jumbotron">
 			<ul class="pager pull-right">
-				<li><a href="/waitapp/3/">Previous</a></li>
-				<li><a href="/waitapp/5/">Next</a></li>
+				<li><a href="/waitapp/scenario/4">Previous</a></li>
+				<li><a href="/waitapp/scenario/6">Next</a></li>
 			</ul>
-			
-			<h3>Physician Continuity Rules</h3>
-			<p>Enter rules for patient-physician continuity:</p>
+			<h3>Scenario: Patient Delegation Rules</h3>
+			<p>Enter rules for patient delegation to non-physician providers:</p>
 			<br>
 			<!-- Rule Form -->
+			
 			<form>
-				<label>Default continuity strategy:</label>
-				<select>
-					<option>Share</option>
-					<option>Do Not Share</option>
-				</select>		
-			</form>
-			<br>
-		
-			<form class="contRuleBox">
-				<div  style="padding-bottom:10px;">
-					<input class="contRule" type="checkbox" name="gender" value="Gender"> &nbsp;Gender:
-					<select class="contRule" >
+				<div style="padding-bottom:10px;">
+					<input type="checkbox" name="gender" value="Gender"> &nbsp;Gender:
+					<select>
 						<option>M</option>
 						<option>F</option>
 					</select>
 				</div>
 				<div style="padding-bottom:10px;">
-					<input class="contRule"  type="checkbox" name="agerange" value="Age Range"> &nbsp;Age Range: &nbsp;
-					<input class="contRule"  type="text" placeholder="0-100" style="max-width:45px;">
+					<input type="checkbox" name="agerange" value="Age Range"> &nbsp;Age Range: &nbsp;
+					<input type="text" placeholder="0-100" style="max-width:45px;">
 				</div>
-				<div class="contRule" style="padding-bottom:10px;">
-					<input class="contRule"  type="checkbox" name="condrange" value="# Chronic Conditions"> &nbsp; # Conditions:
-					<input class="contRule"  type="text" placeholder="0-100" style="max-width:45px;">
+				<div style="padding-bottom:10px;">
+					<input type="checkbox" name="condrange" value="# Chronic Conditions"> &nbsp; # Conditions:
+					<input type="text" placeholder="0-100" style="max-width:45px;">
 				</div>
-				<div class="contRule" style="padding-bottom:10px;">
-					<input class="contRule" type="checkbox" name="visit" value="Visit Type"> &nbsp; Visit Type:
-					<select class="contRule"  style="width:100px;">
+				<div style="padding-bottom:10px;">
+					<input type="checkbox" name="visit" value="Visit Type"> &nbsp; Visit Type:
+					<select style="max-width:80px;">
 						<option>Acute</option>
 						<option>Preventative</option>
 						<option>Chronic</option>
 					</select>
 				</div>
-				<div  style="padding-bottom:10px;">
-					<input class="contRule"  type="checkbox" name="continuity" value="Continuity"> &nbsp; Continuity:
-					<select class="contRule"  style="width:100px;">
-						<option>Share</option>
-						<option>Do Not Share</option>
+				<div style="padding-bottom:10px;">
+					<input type="checkbox" name="condrange" value="# Chronic Conditions"> &nbsp; Patient Name:
+					<input type="text" placeholder="Enter Patient Name" style="width:100px;">
+				</div>
+				<div style="padding-bottom:10px;">
+					<input type="checkbox" name="continuity" value="Continuity"> &nbsp; Delegation:
+					<select style="width:100px;">
+						<option>Nurse 1</option>
+						<option>Asst. 1</option>
 					</select>
 				</div>
-								
+				
 			</form>
-					
 			<div >							
 				<button id="addContRule" class="btn btn-primary" style="margin-top:20px;" >Add Rule</button>						
 			</div>
-		
-		
 		<br>    
 		
-		<!-- File input widget -->
 		<div>
 			<div id="file_input">
 				<label>Or, upload text file:</label>		
@@ -91,12 +82,11 @@
 			</div>    
 		</div>
 		
-
 	<br>
 	<button id="toggleTable" type="button" class="btn btn-primary">Show Table</button>
 	<br>
 	<div id="tableDiv">
-	<table id="contRuleTable">
+	<table id="patTable">
 		<thead>
 			<tr>
 				<th data-field="state" data-checkbox="true"></th>
@@ -107,25 +97,23 @@
 		<tbody>
 		<tr>
 			<td></td>
-			<td>Gender:M AND Age:0-9 AND Visit:Acute</td>
-			<td>Share</td>   	
+			<td>Gender:F AND Age:0-9 AND Visit:Acute</td>
+			<td>Nurse 1</td>   	
 		</tr>    
 		</tbody>
 	</table>
-	<button class="btn btn-default" id="remove-data" data-method="remove">
-			Clear Selected Rows
-	</button>
+	<button class="btn btn-default" id="remove-data" data-method="remove">Clear Selected Rows</button>
 	</div>
 	</div>
 	</div>
 </div>
  <!-- Bootstrap core JavaScript
     ================================================== -->
-    <!-- Placed at the end of the document so the pages load faster -->
-    <script src="{% static 'js/jquery-1.11.1.min.js' %}"></script>
-    <script src="{% static 'js/bootstrap.min.js' %}"></script>
-    <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
-    <script src="{% static 'js/ie10-viewport-bug-workaround.js' %}"></script>
+<!-- Placed at the end of the document so the pages load faster -->
+<script src="{% static 'js/jquery-1.11.1.min.js' %}"></script>
+<script src="{% static 'js/bootstrap.min.js' %}"></script>
+<!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
+<script src="{% static 'js/ie10-viewport-bug-workaround.js' %}"></script>
 <!-- script for file upload functionality -->    
 <script language="javascript">
 $(document).on('change', '.btn-file :file', function() {
@@ -157,41 +145,30 @@ $(document).ready( function() {
 <!--table functionality and toggle show/hide table script -->
 <script language="javascript">
 //set table properties
-$('#contRuleTable').bootstrapTable({
+$('#patTable').bootstrapTable({
     cache: false,	
 	height: 400,
 	striped: true,
 	pagination: true,
 	pageSize: 50,
-	pageList: [10, 25, 50, 100, 200],	
+	pageList: [10, 25, 50, 100, 200],
+	search: true,	
 	clickToSelect: true,
 });
 
-
-//add to table with addAff button
-$('#addContRule').click(function () {
+//add to table with addProv button CURRENTLY NON FUNCTIONAL
+$('#addProv').click(function () {
 	//get form values in array
-	var fields = $( ".contRule" ).serializeArray();
-	var row = "<tr><td></td><td>"
-    jQuery.each( fields, function( i, field ) {
-      row = row + ( " " + field.value + " " );
-    });
-	row =  row + ("</td></tr></td><td>")
-	
-	//alert(row);
-	
-	$('#contRuleTable').bootstrapTable('destroy')
-	$('#contRuleTable').append(row);
-	$('#contRuleTable').bootstrapTable({
-		cache: false,
-		height: 400,
-		striped: true,
-		pagination: true,
-		pageSize: 50,
-		pageList: [10, 25, 50, 100, 200],		
-		clickToSelect: true,
+	var values = {};
+	$.each($('#addForm').serializeArray(), function(i, field) {
+		values[field.name] = field.value;		
 	});
-	$('#patname').val($('#pname').attr('placeholder'))	
+	values['state']=""
+	
+	$('#patTable').bootstrapTable('append-data', {
+		data: values
+	});
+	
 });
 	
 
