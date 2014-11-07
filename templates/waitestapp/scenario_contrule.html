@@ -30,7 +30,7 @@
 				</select>		
 			</form>
 			<br>
-		
+		    <div id="errors"></div>
 			<form class="contRuleBox">
 				<div  style="padding-bottom:10px;">
 					<input class="Check" type="checkbox" name="gender" value="Gender"> &nbsp;Gender:					
@@ -46,8 +46,7 @@
 					
 				</div>
 				<div class="contRule" style="padding-bottom:10px;">
-					<input class="Check"  type="checkbox" name="condrange" value="# Chronic Conditions"> &nbsp; # Conditions:
-					
+					<input class="Check"  type="checkbox" name="condrange" value="# Chronic Conditions"> &nbsp; # Conditions:					
 					<input class="rule-form"  type="text" name="condrange-rule" id="condrange-rule" placeholder="0-100" style="max-width:45px;">
 					
 				</div>
@@ -175,8 +174,9 @@ $('#contRuleTable').bootstrapTable({
 });
 
 
-//add to table with addAff button
 $('#addContRule').click(function () {
+	$('#errors').html(''); //clear errors
+	var no_errors = true
 	//get form values in array
 	var cond_fields = $( ".rule-form" ).serializeArray();
 	var check_fields = $( ".Check" ).serializeArray();
@@ -195,6 +195,18 @@ $('#addContRule').click(function () {
 	// if field is one of the checked boxes
 		var check_key = field.name.slice(0,-5)
 		if (check_key in check_hash) {
+		    //check if fields in correct format
+			if (check_key == "condrange" || check_key == "agerange") {
+				function isNum(element, index, array) {  
+					return /^\d+$/.test(element);
+					}	
+                var input = cond_fields[i].value					
+				var arr = input.split("-");
+				var passed = arr.every(isNum);
+				if (!(passed && arr.length == 2)) {
+				 $('#errors').html("<h5 style='color:red;'>Enter range as numbers seperated by dashes</h5>");
+				 no_errors = false }
+			}
 			//insert AND if not the first field
 			if (count==0) {var bool = ""}
 			else {var bool = " AND"}
@@ -203,35 +215,36 @@ $('#addContRule').click(function () {
 			count = (count + 1);
 			}	
     });
-	
-	row =  row + "</td><td>" + rule +("</td></tr>")
-	
-	alert(row);
-	
-	$('#contRuleTable').bootstrapTable('destroy')
-	$('#contRuleTable').append(row);
-	$('#contRuleTable').bootstrapTable({
-		cache: false,
-		height: 400,
-		striped: true,
-		pagination: true,
-		pageSize: 50,
-		pageList: [10, 25, 50, 100, 200],		
-		clickToSelect: true,
-	});
-	$('#agerange-rule').val($('#agerange-rule').attr('placeholder'))
-	$('#condrange-rule').val($('#condrange-rule').attr('placeholder'))	
+	if (no_errors && check_fields.length > 0) {
+		row =  row + "</td><td>" + rule +("</td></tr>")
+		
+		//alert(row);
+		
+		$('#contRuleTable').bootstrapTable('destroy')
+		$('#contRuleTable').append(row);
+		$('#contRuleTable').bootstrapTable({
+			cache: false,
+			height: 400,
+			striped: true,
+			pagination: true,
+			pageSize: 50,
+			pageList: [10, 25, 50, 100, 200],		
+			clickToSelect: true,
+		});
+		$('#agerange-rule').val('');
+		$('#condrange-rule').val('');
+		
+	}
 });
-	
 
 //delete selected rows button
 $('#remove-data').click(function () {
-	var selects = $('#patTable').bootstrapTable('getSelections');
+	var selects = $('#contRuleTable').bootstrapTable('getSelections');
 		states = $.map(selects, function (row) {
 			return row.state;
 		});
 
-	$('#patTable').bootstrapTable('remove', {
+	$('#contRuleTable').bootstrapTable('remove', {
 		field: 'state',
 		values: states
 	});

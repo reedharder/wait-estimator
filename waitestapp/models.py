@@ -5,5 +5,8 @@ from django.contrib.auth.models import User
 class Session(models.Model):
     #link each session to a user
     user = models.ForeignKey(User)
+    
+class Capacity(models.Model):
+    table = models.TextField()
 
 

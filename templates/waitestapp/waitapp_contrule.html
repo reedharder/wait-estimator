@@ -29,45 +29,44 @@
 					<option>Do Not Share</option>
 				</select>		
 			</form>
-			<br>
-		
-			<form class="contRuleBox">
+			<br>		
+			    <div id="errors"></div>
+				<form class="contRuleBox">
 				<div  style="padding-bottom:10px;">
-					<input class="contRule" type="checkbox" name="gender" value="Gender"> &nbsp;Gender:
-					<select class="contRule" >
+					<input class="Check" type="checkbox" name="gender" value="Gender"> &nbsp;Gender:					
+					<select class="rule-form" name="gender-rule">					    
 						<option>M</option>
 						<option>F</option>
-					</select>
+					</select>					
 				</div>
 				<div style="padding-bottom:10px;">
-					<input class="contRule"  type="checkbox" name="agerange" value="Age Range"> &nbsp;Age Range: &nbsp;
-					<input class="contRule"  type="text" placeholder="0-100" style="max-width:45px;">
+					<input class="Check"  type="checkbox" name="agerange" value="Age Range"> &nbsp;Age Range: &nbsp;					
+					<input class="rule-form"  type="text"  name="agerange-rule" id="agerange-rule" placeholder="0-100" style="max-width:45px;">					
 				</div>
 				<div class="contRule" style="padding-bottom:10px;">
-					<input class="contRule"  type="checkbox" name="condrange" value="# Chronic Conditions"> &nbsp; # Conditions:
-					<input class="contRule"  type="text" placeholder="0-100" style="max-width:45px;">
+					<input class="Check"  type="checkbox" name="condrange" value="# Chronic Conditions"> &nbsp; # Conditions:					
+					<input class="rule-form"  type="text" name="condrange-rule" id="condrange-rule" placeholder="0-100" style="max-width:45px;">					
 				</div>
 				<div class="contRule" style="padding-bottom:10px;">
-					<input class="contRule" type="checkbox" name="visit" value="Visit Type"> &nbsp; Visit Type:
-					<select class="contRule"  style="width:100px;">
+					<input class="Check" type="checkbox" name="visit" value="Visit Type"> &nbsp; Visit Type:					
+					<select class="rule-form"  name="visit-rule" style="width:100px;">
 						<option>Acute</option>
 						<option>Preventative</option>
 						<option>Chronic</option>
-					</select>
+					</select>					
 				</div>
-				<div  style="padding-bottom:10px;">
-					<input class="contRule"  type="checkbox" name="continuity" value="Continuity"> &nbsp; Continuity:
-					<select class="contRule"  style="width:100px;">
+				<div  style="padding-bottom:10px;">					
+					Rule: 
+					<select class="rule" name="continuity-rule" style="width:100px;">
 						<option>Share</option>
 						<option>Do Not Share</option>
-					</select>
-				</div>
-								
-			</form>
-					
+					</select>					
+				</div>								
+			</form>					
 			<div >							
 				<button id="addContRule" class="btn btn-primary" style="margin-top:20px;" >Add Rule</button>						
 			</div>
+		
 		
 		
 		<br>    
@@ -168,49 +167,85 @@ $('#contRuleTable').bootstrapTable({
 });
 
 
-//add to table with addAff button
+
 $('#addContRule').click(function () {
+	$('#errors').html(''); //clear errors
+	var no_errors = true
 	//get form values in array
-	var fields = $( ".contRule" ).serializeArray();
+	var cond_fields = $( ".rule-form" ).serializeArray();
+	var check_fields = $( ".Check" ).serializeArray();
+	var rule = $( ".rule" ).val();
+	//convert checkfields to hash
+	var check_hash = {};
+	$.each(check_fields, function(i, check) {		
+		check_hash[check.name] = (check.value);
+		});
+	
+	//alert(rule);
+	//alert(cond_fields);
 	var row = "<tr><td></td><td>"
-    jQuery.each( fields, function( i, field ) {
-      row = row + ( " " + field.value + " " );
+	var count = 0
+    $.each(cond_fields, function( i, field ) {
+	// if field is one of the checked boxes
+		var check_key = field.name.slice(0,-5)
+		if (check_key in check_hash) {
+		    //check if fields in correct format
+			if (check_key == "condrange" || check_key == "agerange") {
+				function isNum(element, index, array) {  
+					return /^\d+$/.test(element);
+					}	
+                var input = cond_fields[i].value					
+				var arr = input.split("-");
+				var passed = arr.every(isNum);
+				if (!(passed && arr.length == 2)) {
+				 $('#errors').html("<h5 style='color:red;'>Enter range as numbers seperated by dashes</h5>");
+				 no_errors = false }
+			}
+			//insert AND if not the first field
+			if (count==0) {var bool = ""}
+			else {var bool = " AND"}
+			// append field to row
+			row = (row + bool + " " + check_hash[check_key] + ":" + cond_fields[i].value);
+			count = (count + 1);
+			}	
     });
-	row =  row + ("</td></tr></td><td>")
-	
-	//alert(row);
-	
-	$('#contRuleTable').bootstrapTable('destroy')
-	$('#contRuleTable').append(row);
-	$('#contRuleTable').bootstrapTable({
-		cache: false,
-		height: 400,
-		striped: true,
-		pagination: true,
-		pageSize: 50,
-		pageList: [10, 25, 50, 100, 200],		
-		clickToSelect: true,
-	});
-	$('#patname').val($('#pname').attr('placeholder'))	
+	if (no_errors && check_fields.length > 0) {
+		row =  row + "</td><td>" + rule +("</td></tr>")
+		
+		//alert(row);
+		
+		$('#contRuleTable').bootstrapTable('destroy')
+		$('#contRuleTable').append(row);
+		$('#contRuleTable').bootstrapTable({
+			cache: false,
+			height: 400,
+			striped: true,
+			pagination: true,
+			pageSize: 50,
+			pageList: [10, 25, 50, 100, 200],		
+			clickToSelect: true,
+		});
+		$('#agerange-rule').val('');
+		$('#condrange-rule').val('');
+		
+	}
 });
-	
 
 //delete selected rows button
 $('#remove-data').click(function () {
-	var selects = $('#patTable').bootstrapTable('getSelections');
+	var selects = $('#contRuleTable').bootstrapTable('getSelections');
 		states = $.map(selects, function (row) {
 			return row.state;
 		});
 
-	$('#patTable').bootstrapTable('remove', {
+	$('#contRuleTable').bootstrapTable('remove', {
 		field: 'state',
 		values: states
 	});
 });
 
 $(document).ready(function(){
- //var $table = $("#provTable");
-   
+ 
   $("#tableDiv").hide();
   $("#toggleTable").click(function(){
     var button_name = $("#toggleTable").text();

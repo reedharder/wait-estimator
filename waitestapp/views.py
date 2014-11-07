@@ -1,4 +1,23 @@
-from django.shortcuts import render
+from django.shortcuts import render, render_to_response
+from django.contrib.formtools.wizard.views import SessionWizardView
+import waitestapp
+CURRENT_TEMPLATES={'capacity':'waitestapp/waitapp_capacity.html', 
+                   'aff':'waitestapp/waitapp_aff.html',
+                   'attr':'waitestapp/waitapp_attr.html',
+                   'cont':'waitestapp/waitapp_contrule.html',
+                   'del':'waitestapp/waitapp_delrule.html'}
+
+CURRENT_FORMS = [("capacity", waitestapp.forms.CurrCapacityForm),
+                 ("aff", waitestapp.forms.CurrAffForm),
+                 ("attr", waitestapp.forms.CurrAttForm),
+                 ("cont", waitestapp.forms.CurrContForm),
+                 ("del", waitestapp.forms.CurrDelForm)]
+
+class CurrentWizard(SessionWizardView):
+    def done(self, form_list, form_dict, **kwargs):
+        return render_to_response('waitestapp/waitapp_results.html', {
+            'form_data': [form.cleaned_data for form in form_list],
+        })
 
 def home_view(request):
     return render(request, 'waitestapp/base_site.html')
