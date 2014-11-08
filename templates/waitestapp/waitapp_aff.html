@@ -14,9 +14,16 @@
       <!-- Main component for a primary marketing message or call to action -->
       <div class="jumbotron">
 		<ul class="pager pull-right">
-			<li><a href="/waitapp/1/">Previous</a></li>
-			<li><a href="/waitapp/3/">Next</a></li>
+			<li><a class="submitPrev" href="#">Previous</a></li>
+			<li><a class="submitCatch" href="#">Next</a></li>
 		</ul>
+		<form id="submitForm" action="" method="post">
+			{% csrf_token %}
+			{{ wizard.management_form }}
+			{{ wizard.form }}			
+				<input type="submit" style="display:none;"/>
+				<button id="buttonPrev" name="wizard_goto_step" type="submit" value="{{ wizard.steps.prev }}" style="display:none;"></button>
+		</form>
         <h3>Patient Affiliations</h3>
         <p>Enter affiliation of each patient, or load affiliations as file:</p>
 		
@@ -32,10 +39,12 @@
 					</div>
 					<div class="form-group" style="max-width:150px;">
 						<label>Primary Provider</label>
-						<select name="position" class="form-control" style="max-width:145px;">               
-							<option>Doctor 1</option>
-							<option>Doctor 2</option>
-							<option>Doctor 3</option>
+						<select name="position" class="form-control" style="max-width:145px;">
+							{% if phys_list %}
+							{% for phys in phys_list %}
+							<option>{{ phys }}</option>
+							{% endfor %}
+							{% endif %}							
 						</select>
 					</div>				
 					
@@ -170,6 +179,28 @@ $('#affTable').bootstrapTable({
 	pageList: [10, 25, 50, 100, 200],		
 	clickToSelect: true,
 });
+
+//catch page change, convert table data to json, submit to hidden form, then change page
+$('.submitCatch').click(function(e) {
+	e.preventDefault(); //don't follow link yet
+	var table = $('#affTable').tableToJSON({ ignoreColumns: [0] });
+	alert(JSON.stringify(table));
+	//stick stringified JSON of table into hidden form and submit
+	$('#id_table').val(JSON.stringify(table));
+	$('#id_table').submit();	
+	});
+
+//catch page change click, submit data, then return to previous page
+$('.submitPrev').click(function(e) {
+	e.preventDefault(); //don't follow link yet
+	var table = $('#affTable').tableToJSON({ ignoreColumns: [0] });
+	alert(JSON.stringify(table));
+	//stick stringified JSON of table into hidden form and submit
+	$('#id_table').val(JSON.stringify(table));
+	$('#id_table').submit();
+	$( "#submitButton" ).trigger( "submit" );		
+	});
+
 
 
 //add to table with addAff button

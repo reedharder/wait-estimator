@@ -14,9 +14,15 @@
       <!-- Main component -->
 		<div class="jumbotron">
 			<ul class="pager pull-right">
-				<li><a href="/">Previous</a></li>
-				<li><a href="/waitapp/2/">Next</a></li>
+				<li><a href="/">Home</a></li>
+				<li><a class="submitCatch" id="nextWiz" href="#">Next</a></li>
 			</ul>
+			<form id="submitForm" action="" method="post">
+			{% csrf_token %}
+			{{ wizard.management_form }}
+			{{ wizard.form }}			
+				<input type="submit" style="display:none;"/>
+			</form>
 			<h3>Practice Capacity</h3>
 			<p>Enter information about each staff member below, or upload as file:</p>
 			
@@ -186,7 +192,7 @@ $(document).ready( function() {
 
 <!-- bootstrap table script -->
 <script src="{% static 'js/bootstrap-table.min.js' %}"></script>
-
+<script src="{% static 'js/jquery.tabletojson.min.js' %}"></script>
 <!--table functionality and toggle show/hide table script -->
 <script language="javascript">
 //set table properties
@@ -200,6 +206,16 @@ $('#provTable').bootstrapTable({
 		
 	clickToSelect: true,
 });
+
+//catch page change, convert table data to json, submit to hidden form, then change page
+$('.submitCatch').click(function(e) {
+	e.preventDefault(); //don't follow link yet
+	var table = $('#provTable').tableToJSON({ ignoreColumns: [0] });
+	alert(JSON.stringify(table));
+	//stick stringified JSON of table into hidden form and submit
+	$('#id_table').val(JSON.stringify(table));
+	$('#id_table').submit();	
+	});
 
 //add to table with addProv button
 $('#addProv').click(function () {

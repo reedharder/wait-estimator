@@ -14,7 +14,7 @@
 		  <!-- Main component for a primary marketing message or call to action -->
 		  <div class="jumbotron">
 			<ul class="pager pull-right">
-				<li><a href="/waitapp/scenario/4">Previous</a></li>
+				<li><a id="catchMe" href="#">Previous</a></li>
 				<li><a href="/waitapp/scenario/6">Next</a></li>
 			</ul>
 			<h3>Scenario: Patient Delegation Rules</h3>
@@ -155,8 +155,13 @@ $('#delRuleTable').bootstrapTable({
 	clickToSelect: true,
 });
 
+$('#catchMe').click(function(e) {
+    e.preventDefault();
+	alert('hi');
+	});
+
 //add to table with addContRule button
-$('#addDelRule').click(function () {
+$('#addDelRule').click(function() {
 	$('#errors').html(''); //clear errors
 	var no_errors = true
 	//get form values in array
