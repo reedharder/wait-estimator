@@ -4,8 +4,8 @@
 <div >
 	<div style="padding-right:104px; padding-bottom:20px;">
 		<ul class="nav nav-tabs pull-right">		  
-		  <li id="scenarioTab"><a href="/waitapp/scenario/1" >Scenario</a></li>		 
-		  <li class="active" ><a href="/waitapp/results">Current Input</a></li>
+		  <li id="scenarioTab"><a class="submitCatch" href="#">Scenario</a></li>		 
+		  <li class="active" ><a href="#">Current Input</a></li>
 		</ul>
 		<br>
 	</div>
@@ -14,8 +14,13 @@
       <!-- Main component for a primary marketing message or call to action -->
       <div class="jumbotron">
 		<ul class="pager pull-right">
-			<li><a href="/waitapp/6/">Previous</a></li>			
+			<li><a class="submitPrev" href="/waitapp/6/">Previous</a></li>
+			<li><a class="submitCatch" href="/waitapp/scenario/1/">Begin Scenario</a></li>
 		</ul>
+		<div style="display:none;">
+			<a id="prevPage" href="/waitapp/6/"  style="display:none;"> PREV</a>
+			<a id="nextPage" href="/waitapp/scenario/1/"  style="display:none;"> NEXT</a>
+		</div>
         <h3>Current Simulation Results</h3>        
 		<br>
 		<div style="padding-left:25px;">
@@ -23,9 +28,9 @@
 				<label>Results for:</label>
 				<select>
 					<option>Overall</option>
-					<option>Doctor 1</option>
-					<option>Doctor 2</option>
-					<option>Doctor 3</option>
+					{% for phys in phys_list %}
+					<option>{{phys}}</option>
+					{% endfor %}
 				</select>		
 			</form>
 			<br>
@@ -181,11 +186,11 @@
 			</div>
 			 <br>
 			 <br>
-			<div align="right" style="padding-right:40px;">
+			<!-- <div align="right" style="padding-right:40px;">
 				<form action="/waitapp/scenario/1">
 					<input type="submit" value="Begin Modified Scenario">
 				</form>
-			</div>		
+			</div>		 -->
 		
 		
 		
@@ -245,6 +250,7 @@ $('#affTable').bootstrapTable({
 	clickToSelect: true,
 });
 
+/*
 //add to table with addProv button CURRENTLY NON FUNCTIONAL
 $('#addProv').click(function () {
 	//get form values in array
@@ -259,7 +265,7 @@ $('#addProv').click(function () {
 	});
 	
 });
-	
+*/
 
 //delete selected rows button
 $('#remove-data').click(function () {

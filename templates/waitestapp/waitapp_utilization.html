@@ -14,9 +14,13 @@
 		  <!-- Main component for a primary marketing message or call to action -->
 		  <div class="jumbotron">
 			<ul class="pager pull-right">
-				<li><a href="/waitapp/5/">Previous</a></li>
-				<li><a href="/waitapp/results/">Run Simulation</a></li>
+				<li><a class="submitPrev" href="/waitapp/5/">Previous</a></li>
+				<li><a class="submitCatch" href="/waitapp/results/">Next</a></li>
 			</ul>
+			<div style="display:none;">
+				<a id="prevPage" href="/waitapp/5/"  style="display:none;"> PREV</a>
+				<a id="nextPage" href="/waitapp/results/"  style="display:none;"> NEXT</a>
+			</div>
 			
 			<h3>Patient Utilization</h3>
 			<p>Enter information about average patient utilization of services:</p>
@@ -108,7 +112,7 @@ $(document).ready( function() {
 
 <!-- bootstrap table script -->
 <script src="{% static 'js/bootstrap-table.min.js' %}"></script>
-
+<script src="{% static 'js/jquery.tabletojson.min.js' %}"></script>
 <!--table functionality and toggle show/hide table script -->
 <script language="javascript">
 //set table properties
@@ -122,6 +126,91 @@ $('#patTable').bootstrapTable({
 	search: true,	
 	clickToSelect: true,
 });
+
+//csrf config for ajax
+function getCookie(name) {
+    var cookieValue = null;
+    if (document.cookie && document.cookie != '') {
+        var cookies = document.cookie.split(';');
+        for (var i = 0; i < cookies.length; i++) {
+            var cookie = jQuery.trim(cookies[i]);
+            // Does this cookie string begin with the name we want?
+            if (cookie.substring(0, name.length + 1) == (name + '=')) {
+                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                break;
+            }
+        }
+    }
+    return cookieValue;
+}
+var csrftoken = getCookie('csrftoken');
+
+function csrfSafeMethod(method) {
+    // these HTTP methods do not require CSRF protection
+    return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
+}
+function sameOrigin(url) {
+    // test that a given url is a same-origin URL
+    // url could be relative or scheme relative or absolute
+    var host = document.location.host; // host + port
+    var protocol = document.location.protocol;
+    var sr_origin = '//' + host;
+    var origin = protocol + sr_origin;
+    // Allow absolute or scheme relative URLs to same origin
+    return (url == origin || url.slice(0, origin.length + 1) == origin + '/') ||
+        (url == sr_origin || url.slice(0, sr_origin.length + 1) == sr_origin + '/') ||
+        // or any other URL that isn't scheme relative or absolute i.e relative.
+        !(/^(\/\/|http:|https:).*/.test(url));
+}
+$.ajaxSetup({
+    beforeSend: function(xhr, settings) {
+        if (!csrfSafeMethod(settings.type) && sameOrigin(settings.url)) {
+            // Send the token to same-origin, relative URLs only.
+            // Send the token only if the method warrants CSRF protection
+            // Using the CSRFToken value acquired earlier
+            xhr.setRequestHeader("X-CSRFToken", csrftoken);
+        }
+    }
+});
+
+/*
+//catch page change, convert table data to json, submit to hidden form, then change page
+$('.submitPrev').click(function(e) {
+	e.preventDefault(); //don't follow link yet
+	var table = $('#panelTable').tableToJSON({ ignoreColumns: [0], ignoreHiddenRows: false });
+	table  = JSON.stringify(table);
+	alert(table);
+	//stick stringified JSON of table into hidden form and submit	
+	$.ajax({      
+	  url: "?",
+	  type: "POST",
+      data : {'id_table': table},       
+      success: function() {
+	   alert("data recieved!");
+       $( "#prevPage" )[0].click();   
+      }
+    });
+});
+
+//catch page change click, submit data, then return to previous page
+//catch page change, convert table data to json, submit to hidden form, then change page
+$('.submitCatch').click(function(e) {
+	e.preventDefault(); //don't follow link yet
+	var table = $('#panelTable').tableToJSON({ ignoreColumns: [0], ignoreHiddenRows: false });
+	table  = JSON.stringify(table);
+	alert(table);
+	//stick stringified JSON of table into hidden form and submit	
+	$.ajax({      
+	  url: "?",
+	  type: "POST",
+      data : {'id_table': table},       
+      success: function() {
+	   alert("data recieved!");
+       $( "#nextPage" )[0].click();   
+      }
+    });
+});
+*/
 
 //add to table with addProv button CURRENTLY NON FUNCTIONAL
 $('#addProv').click(function () {

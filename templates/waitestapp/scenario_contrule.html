@@ -9,71 +9,77 @@
 		</ul>
 		<br>
 	</div>
-	 <div class="container">
+		<div class="container">
 
 		  <!-- Main component for a primary marketing message or call to action -->
 		  <div class="jumbotron">
 			<ul class="pager pull-right">
-				<li><a href="/waitapp/scenario/3/">Previous</a></li>
-				<li><a href="/waitapp/scenario/5/">Next</a></li>
+				<li><a class="submitPrev" href="/waitapp/scenario/3/" >Previous</a></li>
+				<li><a class="submitCatch" href="/waitapp/scenario/5/">Next</a></li>
 			</ul>
+			<div style="display:none;">
+				<a id="prevPage" href="/waitapp/scenario/3/"  style="display:none;"> PREV</a>
+				<a id="nextPage" href="/waitapp/scenario/5/"  style="display:none;"> NEXT</a>
+			</div>
 			
 			<h3>Scenario: Physician Continuity Rules</h3>
 			<p>Enter rules for patient-physician continuity:</p>
 			<br>
 			<!-- Rule Form -->
+			
 			<form>
 				<label>Default continuity strategy:</label>
-				<select>
-					<option>Share</option>
-					<option>Do Not Share</option>
+				<select id="defCont">
+					<option value="share">Share</option>
+					<option value="noshare">Do Not Share</option>
 				</select>		
 			</form>
-			<br>
-		    <div id="errors"></div>
-			<form class="contRuleBox">
+			<br>		
+			    <div id="errors"></div>
+				<form class="contRuleBox">
 				<div  style="padding-bottom:10px;">
 					<input class="Check" type="checkbox" name="gender" value="Gender"> &nbsp;Gender:					
 					<select class="rule-form" name="gender-rule">					    
 						<option>M</option>
 						<option>F</option>
-					</select>
-					
+					</select>					
 				</div>
 				<div style="padding-bottom:10px;">
 					<input class="Check"  type="checkbox" name="agerange" value="Age Range"> &nbsp;Age Range: &nbsp;					
-					<input class="rule-form"  type="text"  name="agerange-rule" id="agerange-rule" placeholder="0-100" style="max-width:45px;">
-					
+					<input class="rule-form"  type="text"  name="agerange-rule" id="agerange-rule" placeholder="0-100" style="max-width:45px;">					
 				</div>
 				<div class="contRule" style="padding-bottom:10px;">
 					<input class="Check"  type="checkbox" name="condrange" value="# Chronic Conditions"> &nbsp; # Conditions:					
-					<input class="rule-form"  type="text" name="condrange-rule" id="condrange-rule" placeholder="0-100" style="max-width:45px;">
-					
+					<input class="rule-form"  type="text" name="condrange-rule" id="condrange-rule" placeholder="0-100" style="max-width:45px;">					
 				</div>
 				<div class="contRule" style="padding-bottom:10px;">
-					<input class="Check" type="checkbox" name="visit" value="Visit Type"> &nbsp; Visit Type:
-					
+					<input class="Check" type="checkbox" name="visit" value="Visit Type"> &nbsp; Visit Type:					
 					<select class="rule-form"  name="visit-rule" style="width:100px;">
 						<option>Acute</option>
 						<option>Preventative</option>
 						<option>Chronic</option>
-					</select>
-					
+					</select>					
+				</div>
+				<div class="contRule" style="padding-bottom:10px;">
+					<input class="Check"  type="checkbox" name="affiliation" value="Physician"> &nbsp; Affiliation:					
+					<select class="rule-form"  name="affiliation-rule" id="affiliation-rule" style="width:100px;">
+					    {% for phys in phys_list %}
+						<option>{{phys}}</option>
+						{% endfor %}
+					</select>			
 				</div>
 				<div  style="padding-bottom:10px;">					
 					Rule: 
 					<select class="rule" name="continuity-rule" style="width:100px;">
 						<option>Share</option>
 						<option>Do Not Share</option>
-					</select>
-					
-				</div>
-								
-			</form>
-					
+					</select>					
+				</div>								
+			</form>					
 			<div >							
 				<button id="addContRule" class="btn btn-primary" style="margin-top:20px;" >Add Rule</button>						
 			</div>
+		
 		
 		
 		<br>    
@@ -111,11 +117,13 @@
 			</tr>
 		</thead>
 		<tbody>
+		{% for row in table_data %}
 		<tr>
 			<td></td>
-			<td>Gender:M AND Age:0-9 AND Visit:Acute</td>
-			<td>Share</td>   	
+			<td>{{row.Rule}}</td>
+			<td>{{row.Continuity}}</td>   	
 		</tr>    
+		{% endfor %}
 		</tbody>
 	</table>
 	<button class="btn btn-default" id="remove-data" data-method="remove">
@@ -159,7 +167,7 @@ $(document).ready( function() {
 
 <!-- bootstrap table script -->
 <script src="{% static 'js/bootstrap-table.min.js' %}"></script>
-
+<script src="{% static 'js/jquery.tabletojson.min.js' %}"></script>
 <!--table functionality and toggle show/hide table script -->
 <script language="javascript">
 //set table properties
@@ -169,8 +177,95 @@ $('#contRuleTable').bootstrapTable({
 	striped: true,
 	pagination: true,
 	pageSize: 50,
-	pageList: [10, 25, 50, 100, 200],		
+	pageList: [10, 25, 50, 100, 200],	
 	clickToSelect: true,
+});
+
+//csrf config for ajax
+function getCookie(name) {
+    var cookieValue = null;
+    if (document.cookie && document.cookie != '') {
+        var cookies = document.cookie.split(';');
+        for (var i = 0; i < cookies.length; i++) {
+            var cookie = jQuery.trim(cookies[i]);
+            // Does this cookie string begin with the name we want?
+            if (cookie.substring(0, name.length + 1) == (name + '=')) {
+                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                break;
+            }
+        }
+    }
+    return cookieValue;
+}
+var csrftoken = getCookie('csrftoken');
+
+function csrfSafeMethod(method) {
+    // these HTTP methods do not require CSRF protection
+    return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
+}
+function sameOrigin(url) {
+    // test that a given url is a same-origin URL
+    // url could be relative or scheme relative or absolute
+    var host = document.location.host; // host + port
+    var protocol = document.location.protocol;
+    var sr_origin = '//' + host;
+    var origin = protocol + sr_origin;
+    // Allow absolute or scheme relative URLs to same origin
+    return (url == origin || url.slice(0, origin.length + 1) == origin + '/') ||
+        (url == sr_origin || url.slice(0, sr_origin.length + 1) == sr_origin + '/') ||
+        // or any other URL that isn't scheme relative or absolute i.e relative.
+        !(/^(\/\/|http:|https:).*/.test(url));
+}
+$.ajaxSetup({
+    beforeSend: function(xhr, settings) {
+        if (!csrfSafeMethod(settings.type) && sameOrigin(settings.url)) {
+            // Send the token to same-origin, relative URLs only.
+            // Send the token only if the method warrants CSRF protection
+            // Using the CSRFToken value acquired earlier
+            xhr.setRequestHeader("X-CSRFToken", csrftoken);
+        }
+    }
+});
+
+
+//catch page change, convert table data to json, submit to hidden form, then change page
+$('.submitPrev').click(function(e) {
+	e.preventDefault(); //don't follow link yet
+	var table = $('#contRuleTable').tableToJSON({ ignoreColumns: [0], ignoreHiddenRows: false });
+	table  = JSON.stringify(table);
+	alert(table);
+	var defCont = $('#defCont').val();	
+	//stick stringified JSON of table into hidden form and submit	
+	$.ajax({      
+	  url: "?",
+	  type: "POST",
+      data : {'id_table': table, 'defCont': defCont},       
+      success: function() {
+	   alert("data recieved!");
+       $( "#prevPage" )[0].click();   
+      }
+    });
+});
+
+//catch page change click, submit data, then return to previous page
+//catch page change, convert table data to json, submit to hidden form, then change page
+$('.submitCatch').click(function(e) {
+	e.preventDefault(); //don't follow link yet
+	var table = $('#contRuleTable').tableToJSON({ ignoreColumns: [0], ignoreHiddenRows: false });
+	table  = JSON.stringify(table);
+	alert(table);
+	var defCont = $('#defCont').val();
+	alert(defCont);
+	//stick stringified JSON of table into hidden form and submit	
+	$.ajax({      
+	  url: "?",
+	  type: "POST",
+      data : {'id_table': table, 'defCont': defCont},       
+      success: function() {
+	   alert("data recieved!");
+       $( "#nextPage" )[0].click();   
+      }
+    });
 });
 
 
@@ -251,8 +346,7 @@ $('#remove-data').click(function () {
 });
 
 $(document).ready(function(){
- //var $table = $("#provTable");
-   
+ 
   $("#tableDiv").hide();
   $("#toggleTable").click(function(){
     var button_name = $("#toggleTable").text();

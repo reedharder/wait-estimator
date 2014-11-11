@@ -15,14 +15,11 @@
 		<div class="jumbotron">
 			<ul class="pager pull-right">
 				<li><a href="/">Home</a></li>
-				<li><a class="submitCatch" id="nextWiz" href="#">Next</a></li>
+				<li><a class="submitCatch" id="nextWiz" href="/waitapp/2/">Next</a></li>
 			</ul>
-			<form id="submitForm" action="" method="post">
-			{% csrf_token %}
-			{{ wizard.management_form }}
-			{{ wizard.form }}			
-				<input type="submit" style="display:none;"/>
-			</form>
+			<a id="nextPage" href="/waitapp/2/"  style="display:none;"> NEXT</a>
+			
+			
 			<h3>Practice Capacity</h3>
 			<p>Enter information about each staff member below, or upload as file:</p>
 			
@@ -40,8 +37,8 @@
 								<input id="hours" name="hours" class="form-control" placeholder="Hours" style="max-width:115px;">
 							</div>
 							<div class="form-group"  style="max-width:120px;" >
-								<label >Weeks Per Year</label>
-								<input  id="weeks" name="weeks" class="form-control" style="max-width:115px;" placeholder="Weeks">
+								<label >Days Per Year</label>
+								<input  id="days" name="days" class="form-control" style="max-width:115px;" placeholder="Days">
 							</div>					
 							<div class="form-group" style="max-width:150px;">
 								<label>Position</label>
@@ -102,52 +99,22 @@
 							<th data-field="state" data-checkbox="true"></th>
 							<th data-field="name">Provider Name</th>
 							<th data-field="hours">Hours Per Day</th>
-							<th data-field="weeks">Weeks Per Year</th>
+							<th data-field="weeks">Days Per Year</th>
 							<th data-field="position">Position</th>
 							<th data-field="team">Team</th>
 						</tr>
 					</thead>
 					<tbody>
+					{% for row in table_data %}
 					<tr>
 						<td></td>
-						<td>Doctor 1</td>
-						<td>8</td>
-						<td>48</td>
-						<td>Physician</td>
-						<td>Team A</td>
+						<td>{{row.Provider_Name}}</td>
+						<td>{{row.Hours_Per_Day}}</td>
+						<td>{{row.Days_Per_Year}}</td>
+						<td>{{row.Position}}</td>
+						<td>{{row.Team}}</td>
 					</tr>
-					<tr>
-						<td></td>
-						<td>Doctor 2</td>
-						<td>8</td>
-						<td>48</td>
-						<td>Physician</td>
-						<td>Team A</td>
-					</tr>
-					<tr>
-						<td></td>
-						<td>Doctor 3</td>
-						<td>8</td>
-						<td>50</td>
-						<td>Physician</td>
-						<td>Team B</td>
-					</tr>
-					<tr>
-						<td></td>
-						<td>Nurse 1</td>
-						<td>8</td>
-						<td>50</td>
-						<td>Nurse Practitioner</td>
-						<td>Team B</td>
-					</tr>
-					<tr>
-						<td></td>
-						<td>Assist. 1</td>
-						<td>8</td>
-						<td>50</td>
-						<td>Physician Assistant</td>
-						<td>Team A</td>
-					</tr>
+					{% endfor %}
 					</tbody>
 				</table>
 				<button class="btn btn-default" id="remove-data" data-method="remove">
@@ -207,15 +174,71 @@ $('#provTable').bootstrapTable({
 	clickToSelect: true,
 });
 
+
+//csrf config for ajax
+function getCookie(name) {
+    var cookieValue = null;
+    if (document.cookie && document.cookie != '') {
+        var cookies = document.cookie.split(';');
+        for (var i = 0; i < cookies.length; i++) {
+            var cookie = jQuery.trim(cookies[i]);
+            // Does this cookie string begin with the name we want?
+            if (cookie.substring(0, name.length + 1) == (name + '=')) {
+                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                break;
+            }
+        }
+    }
+    return cookieValue;
+}
+var csrftoken = getCookie('csrftoken');
+
+function csrfSafeMethod(method) {
+    // these HTTP methods do not require CSRF protection
+    return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
+}
+function sameOrigin(url) {
+    // test that a given url is a same-origin URL
+    // url could be relative or scheme relative or absolute
+    var host = document.location.host; // host + port
+    var protocol = document.location.protocol;
+    var sr_origin = '//' + host;
+    var origin = protocol + sr_origin;
+    // Allow absolute or scheme relative URLs to same origin
+    return (url == origin || url.slice(0, origin.length + 1) == origin + '/') ||
+        (url == sr_origin || url.slice(0, sr_origin.length + 1) == sr_origin + '/') ||
+        // or any other URL that isn't scheme relative or absolute i.e relative.
+        !(/^(\/\/|http:|https:).*/.test(url));
+}
+$.ajaxSetup({
+    beforeSend: function(xhr, settings) {
+        if (!csrfSafeMethod(settings.type) && sameOrigin(settings.url)) {
+            // Send the token to same-origin, relative URLs only.
+            // Send the token only if the method warrants CSRF protection
+            // Using the CSRFToken value acquired earlier
+            xhr.setRequestHeader("X-CSRFToken", csrftoken);
+        }
+    }
+});
+
+
 //catch page change, convert table data to json, submit to hidden form, then change page
 $('.submitCatch').click(function(e) {
 	e.preventDefault(); //don't follow link yet
-	var table = $('#provTable').tableToJSON({ ignoreColumns: [0] });
-	alert(JSON.stringify(table));
-	//stick stringified JSON of table into hidden form and submit
-	$('#id_table').val(JSON.stringify(table));
-	$('#id_table').submit();	
-	});
+	var table = $('#provTable').tableToJSON({ ignoreColumns: [0], ignoreHiddenRows: false });
+	table  = JSON.stringify(table);
+	alert(table);
+	//stick stringified JSON of table into hidden form and submit	
+	$.ajax({      
+	  url: "?",
+	  type: "POST",
+      data : {'id_table': table},       
+      success: function() {
+	   alert("data recieved!");
+       $( "#nextPage" )[0].click();   
+      }
+    });
+});
 
 //add to table with addProv button
 $('#addProv').click(function () {
@@ -238,9 +261,9 @@ $('#addProv').click(function () {
 		pageList: [10, 25, 50, 100, 200],		
 		clickToSelect: true,
 	});
-	$('#pname').val($('#pname').attr('placeholder'))
-	$('#hours').val($('#hours').attr('placeholder'))
-	$('#weeks').val($('#weeks').attr('placeholder'))
+	$('#pname').val('')
+	$('#hours').val('')
+	$('#weeks').val('')
 	//$('#provTable').bootstrapTable('append-data', {
 		//data: values
 	//});

@@ -20,5 +20,33 @@ class CurrContForm(forms.Form):
     table = forms.TextField(widget=HiddenInput())
 
 class CurrDelForm(forms.Form):
-    table = forms.TestField()
-    table = forms.TextField(widget=Select(choices=('Share','Do Not Share')))
+    table = forms.TextField(widget=HiddenInput())
+    dropdown = forms.TextField(label='Default Continuity Rule:',widget=Select(choices=('Share','Do Not Share')))
+
+class CurrUtForm(forms.Form):
+    pass    
+    
+class CurrResForm(forms.Form):    
+    pass
+    
+class ScenCapacityForm(forms.Form):
+    table = forms.TextField(widget=HiddenInput())
+
+class ScenAffForm(forms.Form):
+    table = forms.TextField(widget=HiddenInput())
+
+class ScenAttForm(forms.Form):
+    table = forms.TextField(widget=HiddenInput())
+    
+class ScenContForm(forms.Form):
+    table = forms.TextField(widget=HiddenInput())
+
+class ScenDelForm(forms.Form):
+    table = forms.TextField(widget=HiddenInput())
+    dropdown = forms.TextField(label='Default Continuity Rule:',widget=Select(choices=('Share','Do Not Share')))
+    
+class ScenUtForm(forms.Form):
+    pass
+    
+class ScenResForm(forms.Form):
+    pass
