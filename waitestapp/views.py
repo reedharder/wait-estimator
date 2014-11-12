@@ -177,24 +177,82 @@ def waitapp_delrule(request):
         table_data = key_clean(table_data)
     return render(request, 'waitestapp/waitapp_delrule.html', {'nonphys_list':request.session['nonphys_list'],'table_data':table_data})
 
-def waitapp_utilization(request):
+def waitapp_utilization(request):#get doctors in list
+    provTable = request.session['capacity_table']
+    #parse doctors and their hours
+    prov_to_num={}
+    num_to_prov={}
+    phys_mins={}
+    non_phys_mins={}
+    for j, row in enumerate(provTable):
+        i = j + 1 #reserve doctor code 0 for any doctor        
+         #map names to numbers
+        print(row)
+        prov_to_num[row['Provider Name']] = i        
+        num_to_prov[i] = row['Provider Name']
+        #note pprovider avg. min per day
+        if row['Position'] == 'Physician': 
+            phys_to_num[row['Provider Name']] = i        
+            num_to_phys[i] = row['Provider Name']
+            phys_mins[i]=60*int(row['Hours Per Day'])*(int(row['Days Per Year']))/360
+        else:
+            non_phys_mins[i]=60*int(row['Hours Per Day'])*(int(row['Days Per Year']))/360
+    #estimate panel composition of each based on namcs
+    request.session['prov_to_num'] = prov_to_num
+    request.session['phys_to_num'] = phys_to_num
+    panelTable = request.session['attr_table']
+    
     capacity_table = request.session['capacity_table']
     phys_capacity = {}
-    team_capacity = {}        
+    team_capacity = {}   
+
+    #create lookup dictionary to map patient conditions to index 
+    
+    category_product=itertools.product([1,2],[0,1,2,3,4,5],[0,1,2,3],phys_to_num.values())
+    category_name_key_mapping={}
+    for ind, category in enumerate(category_product):
+        category_name_key_mapping[category]=ind
+        ind_to_category[ind] = category 
+        
+        #dictionary keyed to integer representations for each key (gender, age bracket, chron condition bracket, physician)
+    request.session['category_name_key_mapping'] = category_name_key_mapping
+    request.session['ind_to_category'] = ind_to_category           
     #note capacities for teams and physicians (and compile a list of physicians for each team)
     for record in capacity_table:
         if record['Position'] == 'Physician':
-            phys_capacity[record['Provider Name']] = int(record['Hours Per Day'])*int(record['Weeks Per Year'])
+            phys_capacity[record['Provider Name']] = int(record['Hours Per Day'])*int(record['Days Per Year'])
         try:
             team_capacity[record['Team']][0] += [record['Position'] + record['Provider Name']]
-            team_capacity[record['Team']][1] += int(record['Hours Per Day'])*int(record['Weeks Per Year'])
+            team_capacity[record['Team']][1] += int(record['Hours Per Day'])*int(record['Days Per Year'])
         except KeyError:
+            team_capacity[record['Team']] = ['','']
             team_capacity[record['Team']][0] = [record['Position'] + record['Provider Name']]
-            team_capacity[record['Team']][1] += int(record['Hours Per Day'])*int(record['Weeks Per Year'])
+            team_capacity[record['Team']][1] = int(record['Hours Per Day'])*int(record['Days Per Year'])
     return render(request, 'waitestapp/waitapp_utilization.html', {'phys_capacity':phys_capacity,'team_capacity':team_capacity })
 
 def waitapp_results(request):    
-    return render(request, 'waitestapp/waitapp_results.html')
+    if request.method == 'POST':
+        #processs input
+        category_name_key_mapping = request.session['category_name_key_mapping']
+        
+        gender  = request.POST['gender']
+        gender = gender_bracket(gender)
+        age  = request.POST['gender']
+        age=int(age)        
+        chron = request.POST['chron']
+        chron=int(chron[0])
+        doc = request.POST['doc']
+        prov_to_num = request.session['prov_to_num'] 
+        doc = prov_to_num[doc]
+        visit = request.POST['visit']
+        visit = vist_bracket(visit)
+        if request.POST['type'] == 'rowSelect':
+            pass
+        
+    else:
+        
+            
+    return render(request, 'waitestapp/waitapp_results.html', {'phys_list':request.session['phys_list']})
 
 def scenario_capacity(request):
     if request.method == 'POST':
@@ -304,6 +362,8 @@ def scenario_utilization(request):
 def scenario_results(request):
     return render(request, 'waitestapp/scenario_results.html')
 
+
+# METHODS FOR VIEWS
 #replaces spaces in dictionary keys with underscores for ease of use in templates
 def key_clean(table):
     new_table = []
@@ -313,3 +373,64 @@ def key_clean(table):
             new_dict[key.replace(" ","_")] = old_dict[key]
         new_table.append(new_dict)
     return new_table
+
+def coding_for_provider(provider_type):
+    if provider_type == "Physician":
+        coding = 1
+    else: 
+        coding = 2
+    return coding
+    
+    
+#sorts age into an age bin    
+def visit_bracket(visit):
+            
+    if visit == 'Acute':
+        visit_bracket = 0
+    elif visit == 'Preventative':
+        visit_bracket = 1
+    else:
+        visit_bracket = 2
+    return visit_bracket
+
+def gender_bracket(gender):
+            
+    if gender == 'M':
+        gender_bracket = 0   
+    else:
+        visit_bracket = 1
+    return gender_bracket
+    
+
+#sorts age into an age bin    
+def age_bracket(age):
+    age= int(age)        
+    if age <15:
+        age_bracket = 0
+    elif age >= 15 and age <=24:
+        age_bracket = 1
+    elif age >= 25 and age <=44:
+        age_bracket =2
+    elif age >= 45 and age <=64:
+        age_bracket =3
+    elif age >= 65 and age <=74:
+        age_bracket =4
+    else:
+        age_bracket = 5
+    return age_bracket
+    
+   
+    
+#sorts number of chronic conditions into bin
+def chron_bracket(chron):
+    chron=int(chron)
+    if chron == 0:
+        chron_bracket = 0
+    elif chron == 1:
+        chron_bracket = 1
+    elif chron == 2:
+        chron_bracket = 2
+    elif chron >= 3:
+        chron_bracket = 3
+    return chron_bracket
+        

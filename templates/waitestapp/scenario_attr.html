@@ -134,7 +134,7 @@
 
 	<br>
 
-	<button id="toggleTable" type="button" class="btn btn-primary">Show Table</button>
+	<button id="toggleTable" type="button" class="btn btn-primary">Use Patient-By-Patient Data</button>
 	<br>
 	<div id="tableDiv">
 	<table id="patTable">
@@ -373,11 +373,11 @@ $(document).ready(function(){
   $("#tableDiv").hide();
   $("#toggleTable").click(function(){
     var button_name = $("#toggleTable").text();
-    if (button_name == "Show Table") {
-        $("#toggleTable").text("Hide Table") 
+    if (button_name == "Use Patient-By-Patient Data") {
+        $("#toggleTable").text("Use Aggregate Data") 
     }
     else {
-        $("#toggleTable").text("Show Table")
+        $("#toggleTable").text("Use Patient-By-Patient Data")
     }        
     $("#tableDiv").toggle();
   });

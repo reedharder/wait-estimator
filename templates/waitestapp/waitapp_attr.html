@@ -64,7 +64,7 @@
 						<th data-field="physician">Physician</th>
 						<th data-field="M">Males</th>	
 						<th data-field="F">Females</th>
-						<th data-field="F">Panel Size</th>						
+						<th data-field="Panel">Panel Size</th>						
 					</tr>
 				</thead>
 				<tbody>
@@ -134,7 +134,7 @@
 
 	<br>
 
-	<button id="toggleTable" type="button" class="btn btn-primary">Show Table</button>
+	<button id="toggleTable" type="button" class="btn btn-primary">Use Patient-By-Patient Data</button>
 	<br>
 	<div id="tableDiv">
 	<table id="patTable">
@@ -207,10 +207,7 @@ $(document).ready( function() {
 $('#panelTable').bootstrapTable({
     cache: false,
 	height: 200,
-	striped: true,
-	pagination: true,
-	pageSize: 50,
-	pageList: [10, 25, 50, 100, 200],
+	striped: true,	
 	clickToSelect: true,
 });
 
@@ -322,22 +319,25 @@ $('#addPanel').click(function () {
     jQuery.each( fields, function( i, field ) {
       row = row + ( "<td>" + field.value + "</td>" );
     });
+	alert(row);
 	// compute full panel size from number of males and females
-	var panelSize = parseInt(fields[2].value, 10) + parseInt(fields[3].value, 10)
+	var panelSize = parseInt(fields[1].value, 10) + parseInt(fields[2].value, 10)
+	alert(parseInt(fields[1].value, 10));
+	alert(parseInt(fields[2].value, 10));
+	
 	row =  row + ("<td>" + panelSize + "</td>"  +"</tr>")
+	alert(row);
 	
 	$('#panelTable').bootstrapTable('destroy')
 	$('#panelTable').append(row);
 	$('#panelTable').bootstrapTable({
 		cache: false,
-		height: 400,
-		striped: true,
-		pagination: true,
-		pageSize: 50,
-		pageList: [10, 25, 50, 100, 200],		
+		height: 200,
+		striped: true,			
 		clickToSelect: true,
 	});
-	$('#nummale').val($('').attr(''))	
+	$('#nummale').val('')	
+	$('#numfmale').val('')	
 });
 	
 
@@ -373,11 +373,11 @@ $(document).ready(function(){
   $("#tableDiv").hide();
   $("#toggleTable").click(function(){
     var button_name = $("#toggleTable").text();
-    if (button_name == "Show Table") {
-        $("#toggleTable").text("Hide Table") 
+    if (button_name == "Use Patient-By-Patient Data") {
+        $("#toggleTable").text("Use Aggregate Data") 
     }
     else {
-        $("#toggleTable").text("Show Table")
+        $("#toggleTable").text("Use Patient-By-Patient Data")
     }        
     $("#tableDiv").toggle();
   });

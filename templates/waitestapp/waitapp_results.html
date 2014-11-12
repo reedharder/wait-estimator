@@ -4,7 +4,7 @@
 <div >
 	<div style="padding-right:104px; padding-bottom:20px;">
 		<ul class="nav nav-tabs pull-right">		  
-		  <li id="scenarioTab"><a class="submitCatch" href="#">Scenario</a></li>		 
+		  <li id="scenarioTab"><a class="submitCatch" href="/waitapp/scenario/1">Scenario</a></li>		 
 		  <li class="active" ><a href="#">Current Input</a></li>
 		</ul>
 		<br>
@@ -26,7 +26,7 @@
 		<div style="padding-left:25px;">
 			<form>
 				<label>Results for:</label>
-				<select>
+				<select class="pageSelect">
 					<option>Overall</option>
 					{% for phys in phys_list %}
 					<option>{{phys}}</option>
@@ -39,7 +39,7 @@
 				<br><br>
 				<div id="border1" style="border:1px solid black;  padding:30px;">
 					<span><strong> For patient with </strong>
-						<select>
+						<select class = "tableSelect">
 									<option>0</option>
 									<option>1</option>
 									<option>2</option>
@@ -47,41 +47,43 @@
 						</select> 
 						<strong>chronic conditions: </strong>
 					</span><br>
+					<br>
 					<div id="resultsTable">		
-						<table>
+						<table><!--
 							<thead>
 								<tr>
 									<th data-field="gender" ></th>
-									<th data-field="patname"></th>
-									<th data-field="provname"></th>   
-									<th data-field="provname"></th>
-									<th data-field="provname"></th>
-								</tr>
-							</thead>
+									<th data-field="age"></th>
+									<th data-field="visit"></th>   
+									<th data-field="estwait"></th>
+									<th data-field="percwait"></th>
+								</tr> 
+							</thead>-->
 							<tbody>
-							 <tr>
-									<td>Gender</td>
-									<td>Age Group</td>
-									<td >Visit Type</td>   
-									<td >Est. Wait Time (days)</td>
-									<td >
-										<select>
-											<option>100% of Patients wait less than:</option>
-											<option>99% of Patients wait less than:</option>
-											<option>95% of Patients wait less than:</option>
-										</select>
-									</td>
-								</tr>
-							 <tr>
+							<tr>
+								<td></td>
+								<td>Gender</td>
+								<td>Age Group</td>
+								<td>Visit Type</td>   
+								<td>Est. Wait Time (days)</td>
 								<td>
-									<select>
+									<select class="colSelect">
+										<option title="100">100% of Patients wait less than:</option>
+										<option title="99">99% of Patients wait less than:</option>
+										<option title="95">95% of Patients wait less than:</option>
+									</select>
+								</td>
+							</tr>
+							 <tr class="row" title="rowSelect age1">
+								<td>
+									<select class="rowSelect age1">
 										<option>M</option>
 										<option>F</option>
 									</select>
 								</td>
-								<td>0-24</td>
+								<td>0-14</td>
 								<td>
-									<select>
+									<select class="rowSelect age1">
 										<option>Preventative</option>
 										<option>Acute</option>
 										<option>Chronic</option>
@@ -90,16 +92,16 @@
 								<td><div id="wait1">N/A</div></td>
 								<td><div id="percentile1">N/A</div></td>
 							</tr>
-							<tr>
+							<tr class="row" title="rowSelect age2">
 								<td>
-									<select>
+									<select class="rowSelect age2">
 										<option>M</option>
 										<option>F</option>
 									</select>
 								</td>
-								<td>25-54</td>
+								<td>15-24</td>
 								<td>
-									<select>
+									<select class="rowSelect age2" >
 										<option>Preventative</option>
 										<option>Acute</option>
 										<option>Chronic</option>
@@ -108,16 +110,16 @@
 								<td><div id="wait2">N/A</div></td>
 								<td><div id="percentile2">N/A</div></td>
 							</tr>
-							<tr>
+							<tr class="row" title="rowSelect age3">
 								<td>
-									<select>
+									<select class="rowSelect age3">
 										<option>M</option>
 										<option>F</option>
 									</select>
 								</td>
-								<td>55+</td>
+								<td>25-44</td>
 								<td>
-									<select>
+									<select class="rowSelect age3">
 										<option>Preventative</option>
 										<option>Acute</option>
 										<option>Chronic</option>
@@ -125,7 +127,61 @@
 								</td>
 								<td><div id="wait3">N/A</div></td>
 								<td><div id="percentile3">N/A</div></td>
-							</tr>				
+							</tr>
+							<tr class="row" title="rowSelect age4">
+								<td>
+									<select class="rowSelect age4">
+										<option>M</option>
+										<option>F</option>
+									</select>
+								</td>
+								<td>45-64</td>
+								<td>
+									<select class="rowSelect age4">
+										<option>Preventative</option>
+										<option>Acute</option>
+										<option>Chronic</option>
+									</select>
+								</td>
+								<td><div id="wait4">N/A</div></td>
+								<td><div id="percentile4">N/A</div></td>
+							</tr>
+							<tr class="row" title="rowSelect age5">
+								<td>
+									<select class="rowSelect age5">
+										<option>M</option>
+										<option>F</option>
+									</select>
+								</td>
+								<td>65-74</td>
+								<td>
+									<select class="rowSelect age5">
+										<option>Preventative</option>
+										<option>Acute</option>
+										<option>Chronic</option>
+									</select>
+								</td>
+								<td><div id="wait5">N/A</div></td>
+								<td><div id="percentile5">N/A</div></td>
+							</tr>	
+							<tr class="row" title="rowSelect age6">
+								<td>
+									<select class="rowSelect age6">
+										<option>M</option>
+										<option>F</option>
+									</select>
+								</td>
+								<td>75+</td>
+								<td>
+									<select class="rowSelect age6">
+										<option>Preventative</option>
+										<option>Acute</option>
+										<option>Chronic</option>
+									</select>
+								</td>
+								<td><div id="wait6">N/A</div></td>
+								<td><div id="percentile6">N/A</div></td>
+							</tr>	
 							</tbody>
 						</table>
 					</div>
@@ -137,7 +193,7 @@
 				 <tr>
 					<td>Gender</td>
 					<td>Age Range</td> 
-					<td>Cond. Range</td>
+					<td>Conditions</td>
 					<td>Visit Type</td>
 					<td></td>
 					<td>Est. Wait Time (days)</td>
@@ -151,18 +207,23 @@
 				 </tr>
 				  <tr>
 					<td>
-						<select>
+						<select class="queryOption">
 							<option>M</option>
 							<option>F</option>
 						</select>
 					</td>
 					<td>
-						<form style="height:21px;">
-							<input type="text" name="age" placeholder="0-100" style="height:20px; width:50px;">
-						</form>
+						<select class="queryOption">
+							<option>0-14</option>
+							<option>15-24</option>
+							<option>24-44</option>
+							<option>45-64</option>
+							<option>65-74</option>
+							<option>75+</option>
+						</select>
 					</td>				
 					<td>
-						<select>
+						<select class="queryOption">
 							<option>0</option>
 							<option>1</option>
 							<option>2</option>
@@ -170,7 +231,7 @@
 						</select>
 					</td>
 					<td>
-						<select>
+						<select class="queryOption">
 							<option>Preventative</option>
 							<option>Acute</option>
 							<option>Chronic</option>
@@ -209,91 +270,105 @@
 <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
 <script src="{% static 'js/ie10-viewport-bug-workaround.js' %}"></script>
 <!-- script for file upload functionality -->    
-<script language="javascript">
-$(document).on('change', '.btn-file :file', function() {
-  var input = $(this),
-	  numFiles = input.get(0).files ? input.get(0).files.length : 1,
-	  label = input.val().replace(/\\/g, '/').replace(/.*\//, '');
-  input.trigger('fileselect', [numFiles, label]);
-});
-
-$(document).ready( function() {
-	$('.btn-file :file').on('fileselect', function(event, numFiles, label) {
-		
-		var input = $(this).parents('.input-group').find(':text'),
-			log = numFiles > 1 ? numFiles + ' files selected' : label;
-		
-		if( input.length ) {
-			input.val(log);
-		} else {
-			if( log ) alert(log);
-		}
-		
-	});
-});
-</script>
 
 <!-- bootstrap table script -->
 <script src="{% static 'js/bootstrap-table.min.js' %}"></script>
 
 <!--table functionality and toggle show/hide table script -->
 <script language="javascript">
-//set table properties
-$('#affTable').bootstrapTable({
-    cache: false,
-	height: 400,
-	striped: true,
-	pagination: true,
-	pageSize: 50,
-	pageList: [10, 25, 50, 100, 200],
-	search: true,	
-	clickToSelect: true,
-});
-
-/*
-//add to table with addProv button CURRENTLY NON FUNCTIONAL
-$('#addProv').click(function () {
-	//get form values in array
-	var values = {};
-	$.each($('#addForm').serializeArray(), function(i, field) {
-		values[field.name] = field.value;		
-	});
-	values['state']=""
+//row change ajax call
+$('.rowSelect').on('change', function() {
+	//get class of row
+	var rowclass = $(this).attr('class');
 	
-	$('#affTable').bootstrapTable('append-data', {
-		data: values
-	});
+	//filter out age class 
+	rowclass = "." + rowclass.split(" ")[1]
 	
+	//get row/agegroup
+	row = rowclass.slice(-1);	
+	//get array of gender and visit type
+	var params= $(rowclass).map(function() {
+		return $(this).val();
+	}).get();
+	var ansid = "#wait" + row	
+	chron_cond = $('.tableSelect').val()
+	doc = $('.pageSelect').val()
+	$(ansid).text(params.toString() + "_" + row + chron_cond + doc)
 });
-*/
 
-//delete selected rows button
-$('#remove-data').click(function () {
-	var selects = $('#affTable').bootstrapTable('getSelections');
-		states = $.map(selects, function (row) {
-			return row.state;
-		});
 
-	$('#affTable').bootstrapTable('remove', {
-		field: 'state',
-		values: states
+
+$('.tableSelect').on('change', function() {
+	var chron_cond = $('.tableSelect').val()
+	var doc = $('.pageSelect').val()
+	//loopthrough rows of table, query information
+	$('.row').each( function() {
+		//get row class stored in tr title
+		var rowclass = $(this).attr('title');	
+		//filter out age class 
+		rowclass = "." + rowclass.split(" ")[1]	
+		//get row/agegroup
+		row = rowclass.slice(-1);	
+		//get array of gender and visit type
+		var params= $(rowclass).map(function() {
+			return $(this).val();
+		}).get();
+		var ansid = "#wait" + row				
+		$(ansid).text(params.toString() + "_" + row + chron_cond + doc)
 	});
 });
 
-$(document).ready(function(){
- //var $table = $("#provTable");
-   
-  $("#tableDiv").hide();
-  $("#toggleTable").click(function(){
-    var button_name = $("#toggleTable").text();
-    if (button_name == "Show Table") {
-        $("#toggleTable").text("Hide Table") 
-    }
-    else {
-        $("#toggleTable").text("Show Table")
-    }        
-    $("#tableDiv").toggle();
-  });
+
+$('.pageSelect').on('change', function() {
+	var doc = $('.pageSelect').val();
+	var chron_cond = $('.tableSelect').val();
+	
+	$('#overallTime').text(doc);
+	//loopthrough rows of table, query information
+	$('.row').each( function() {
+		//get row class stored in tr title
+		var rowclass = $(this).attr('title');	
+		//filter out age class 
+		rowclass = "." + rowclass.split(" ")[1]	
+		//get row/agegroup
+		row = rowclass.slice(-1);	
+		//get array of gender and visit type
+		var params= $(rowclass).map(function() {
+			return $(this).val();
+		}).get();
+		var ansid = "#wait" + row				
+		$(ansid).text(params.toString() + "_" + row + chron_cond + doc)
+	});
+});
+
+$('.colSelect').on('change', function() {
+	
+	var doc = $('.pageSelect').val();
+	var chron_cond = $('.tableSelect').val();
+	var perc = $('.colSelect option:selected').attr('title')
+	//loopthrough rows of table, query information
+	$('.row').each( function() {
+		//get row class stored in tr title
+		var rowclass = $(this).attr('title');	
+		//filter out age class 
+		rowclass = "." + rowclass.split(" ")[1]	
+		//get row/agegroup
+		row = rowclass.slice(-1);	
+		//get array of gender and visit type
+		var params= $(rowclass).map(function() {
+			return $(this).val();
+		}).get();
+		var ansid = "#percentile" + row				
+		$(ansid).text(params.toString() + "_" + row + chron_cond + "_" + perc)
+	});
+});
+
+//button to submit qery action
+$('#query').click( function() {
+	var qParams= $('.queryOption').map(function() {
+				return $(this).val();}).get();	
+	$('#queryEst').text(qParams.toString())
+	$('#queryPerc').text(qParams.toString())
 });
 </script>
 

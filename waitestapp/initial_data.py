@@ -4,8 +4,9 @@ Created on Fri Nov  7 19:10:08 2014
 
 @author: Reed
 """
-#OPEN TABLE IF CLOSED PERHAPS
-#CHECK IF NO PROCIDER ADDED HOPEFULLY
+#
+#CHECKING MECHANISM FOR NUMBERS, MAKE SURE THEY ARE SENSIBLE
+
 capacity_json = [{"Provider_Name":"Doctor 1","Hours_Per_Day":"8","Days_Per_Year":"48","Position":"Physician","Team":"Team A"},
                  {"Provider_Name":"Doctor 2","Hours_Per_Day":"8","Days_Per_Year":"48","Position":"Physician","Team":"Team A"},
                  {"Provider_Name":"Doctor 3","Hours_Per_Day":"8","Days_Per_Year":"50","Position":"Physician","Team":"Team B"},
