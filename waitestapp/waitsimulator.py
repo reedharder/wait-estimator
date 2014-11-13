@@ -153,6 +153,7 @@ def mat_sim(cut_off=0, carve_out=True, days, freqs, durs,  nums, num_classes, nu
                 
     
     #see if simulation passed service load parameters 
+    '''
     sload_dict={}
     overall_dist=np.sum(waited, axis=1)
     overall_percentile=int(round(np.percentile(np.repeat(np.array(range(0,days)),overall_dist), exp_sload['Overall'][0])))
@@ -160,7 +161,7 @@ def mat_sim(cut_off=0, carve_out=True, days, freqs, durs,  nums, num_classes, nu
         sload_dict['Overall']=False
     else:
         sload_dict['Overall']=True
-        
+    '''
     
     return (waited, demand_matrix)
         

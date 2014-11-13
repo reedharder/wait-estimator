@@ -21,6 +21,7 @@
 				<a id="prevPage" href="/waitapp/5/"  style="display:none;"> PREV</a>
 				<a id="nextPage" href="/waitapp/results/"  style="display:none;"> NEXT</a>
 			</div>
+			<img src="{% static 'img/ajax-loader.gif' %}" style="display: none; position: absolute; right: 50px;" id="imgProgress" />
 			
 			<h3>Patient Utilization</h3>
 			<p>Utilization of services for each physician:</p>
@@ -253,26 +254,25 @@ $('.submitPrev').click(function(e) {
       }
     });
 });
-
+*/
 //catch page change click, submit data, then return to previous page
-//catch page change, convert table data to json, submit to hidden form, then change page
+// send signal to start simulation, run loading sign
 $('.submitCatch').click(function(e) {
-	e.preventDefault(); //don't follow link yet
-	var table = $('#panelTable').tableToJSON({ ignoreColumns: [0], ignoreHiddenRows: false });
-	table  = JSON.stringify(table);
-	alert(table);
-	//stick stringified JSON of table into hidden form and submit	
+	e.preventDefault(); //don't follow link yet	
+	//show image progress
+	$("#imgProgress").show(); 
 	$.ajax({      
 	  url: "?",
 	  type: "POST",
-      data : {'id_table': table},       
+      data : {'alert'     
       success: function() {
 	   alert("data recieved!");
+	   $("#imgProgress").hide();
        $( "#nextPage" )[0].click();   
       }
     });
 });
-*/
+
 
 
 

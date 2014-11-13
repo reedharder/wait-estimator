@@ -1,6 +1,6 @@
-from django.shortcuts import render, render_to_response
+from django.shortcuts import render, ##render_to_response
 from django.http import HttpResponse
-from django.contrib.formtools.wizard.views import SessionWizardView
+##from django.contrib.formtools.wizard.views import SessionWizardView
 from  waitestapp import initial_data
 
 
@@ -178,223 +178,243 @@ def waitapp_delrule(request):
     return render(request, 'waitestapp/waitapp_delrule.html', {'nonphys_list':request.session['nonphys_list'],'table_data':table_data})
 
 def waitapp_utilization(request):#get doctors in list
-    provTable = request.session['capacity_table']
-   
     import numpy as np
-    from itertools import product       
-    
-    #parse doctors and their hours
-    prov_to_num={}
-    num_to_prov={}
-    phys_to_num={}
-    num_to_phys={}
-    phys_mins={}
-    non_phys_mins={}
-    for j, row in enumerate(provTable):
-        i = j + 1 #reserve doctor code 0 for any doctor        
-         #map names to numbers
-        print(row)
-        prov_to_num[row['Provider Name']] = i        
-        num_to_prov[i] = row['Provider Name']
-        #note pprovider avg. min per day
-        if row['Position'] == 'Physician': 
-            phys_to_num[row['Provider Name']] = i        
-            num_to_phys[i] = row['Provider Name']
-            phys_mins[i]=60*int(row['Hours Per Day'])*(int(row['Days Per Year']))/360
-        else:
-            non_phys_mins[i]=60*int(row['Hours Per Day'])*(int(row['Days Per Year']))/360
-            
-    
-    #generate list of shared categories
-    #share everything if default 
-    if request.session['defCont'] == 'share':
-        shared_categories = [categ for categ in product([1,2],[1,2,3,4,5,6], [0,1,2,3],[1,2,3],phys_to_num.values())]
-    else:
-        shared_categories = []
-    for line in request.session['cont_table']:
-        rule_dict={}
-        rule_categories=[[],[],[],[]]
-        #dictionary for each rule component
-        for ind, element in enumerate(line['Rule'].split(' ')):
-            ##print('el: %s' % element)
-            if ind % 2 == 0: # if not a boolean element
-                rule_dict[element.split(':')[0]]=element.split(':')[1]
-        if 'Gender' in rule_dict:
-            rule_categories[0] = [2] if rule_dict['Gender']=='M' else [1] 
-        else:
-            rule_categories[0] = [1,2]
-        if 'Age' in rule_dict:
-            rule_categories[1]=list(range(age_bracket(rule_dict['Age'].split('-')[0]), age_bracket(rule_dict['Age'].split('-')[1]) + 1))
-        else:
-            rule_categories[1]=[1,2,3,4,5,6]
-        if 'Chronic' in rule_dict:
-            rule_categories[2]=list(range(chron_bracket(rule_dict['Cond'].split('-')[0]), chron_bracket(rule_dict['Age'].split('-')[1]) + 1))
-        else:
-            rule_categories[2]=[0,1,2,3]
-        if 'Visit' in rule_dict:
-            rule_categories[3]=[visit_bracket(rule_dict['Visit'])]
-        else:
-            rule_categories[3]=[1,2,3]
-        if 'Provider' in rule_dict:
-            rule_categories[4]=[phys_to_num[rule_dict['Provider']]]
-        else:
-            rule_categories[4]=phys_to_num.values()
-        # list of category integer indices for which the current rule applies
-        rule = line['Continuity']        
-        
-        categories_affected=[categ for categ in product(rule_categories[0], rule_categories[1], rule_categories[2], rule_categories[3], rule_categories[4])]
-        
-        for category in categories_affected:
-            if rule == 'Share':
-                shared_categories.append(category)
-            #if default share and rule is no share, remove categry from shared list
-            elif request.session['defCont'] == 'share' and rule == "Do Not Share" and (category in  shared_categories):
-                while category in shared_categories: shared_categories.remove(category)  
-                    
-                  
-    #estimate panel composition of each based on namcs
-    request.session['prov_to_num'] = prov_to_num
-    request.session['phys_to_num'] = phys_to_num
-    panelTable = request.session['attr_table']
-    #generate panels:
-    from collections import Counter
-    #lookup index for each visit type   
-    category_full_to_ind = {}
-    nums = []
-    freqs = []
-    durs = []
-    doc_lookup = []
-    ind = 0 # start increment counter
-    phys_demand = {} #dictionary of demand per physician
-    for panel in panelTable:
-        acute_demand = 0 # start counter of demand
-        prev_demand = 0
-        chronic_demand = 0
-        doc = prov_to_num[panelTable['Physician']]
-        num_males = int(panelTable['Males'])
-        num_females = int(panelTable['Females'])
-        #generate panel accordin to male female ratio and namcs proportions
-        male_dist = Counter(np.random.choice(initial_data.female_cats, num_females, initial_data.female_p))
-        female_dist = Counter(np.random.choice(initial_data.female_cats, num_females, initial_data.female_p))
-        #get full distribution of patient types on panel
-        panel_dict = male_dist + female_dist
-        #generate import simulation data
-        for patient_category in panel_dict:
-            #ACUTE            
-            #input sex,age,chron,visit, doc           
-            category_full_to_ind[(int(patient_category[0]),int(patient_category[1]),int(patient_category[0]),1,int(doc))] = ind
-            nums.append(int(panel_dict[patient_category])) #append number represented
-            #input sex, age, chron, visit
-            freq =initial_data.freq_dict(int(patient_category[0]),int(patient_category[1]),int(patient_category[2]),1)
-            dur =initial_data.durs_dict(int(patient_category[0]),int(patient_category[1]),int(patient_category[2]),1)
-            freqs.append(freq)
-            durs.append(dur)      
-            #add to acute demand
-            acute_demand += int(panel_dict[patient_category])*freq*360*dur*(1/60)
-            doc_lookup.append(int(doc))            
-            ind += 1 #increment index
-            #PREV
-            #input sex,age,chron,visit, doc
-            category_full_to_ind[(int(patient_category[0]),int(patient_category[1]),int(patient_category[0]),2,int(doc))] = ind
-            nums.append(panel_dict[patient_category]) #append number represented
-            #input sex, age, chron, visit
-            freq = initial_data.freq_dict(int(patient_category[0]),int(patient_category[1]),int(patient_category[2]),2)
-            dur = initial_data.durs_dict(int(patient_category[0]),int(patient_category[1]),int(patient_category[2]),2)
-            freqs.append(freq)
-            durs.append(dur) 
-            #add to prev demand
-            prev_demand += int(panel_dict[patient_category])*freq*360*dur*(1/60)
-            doc_lookup.append(int(doc))
-            ind +=1 #increment index
-            #CHRONIC
-            #input sex,age,chron,visit, doc
-            category_full_to_ind[(int(patient_category[0]),int(patient_category[1]),int(patient_category[0]),3,int(doc))] = ind
-            nums.append(panel_dict[patient_category]) #append number represented
-            #input sex, age, chron, visit
-            freq =initial_data.freq_dict(int(patient_category[0]),int(patient_category[1]),int(patient_category[2]),3)
-            dur =initial_data.durs_dict(int(patient_category[0]),int(patient_category[1]),int(patient_category[2]),3)
-            freqs.append(freq)
-            durs.append(dur)   
-            #add to acute demand
-            chronic_demand += int(panel_dict[patient_category])*freq*360*dur*(1/60)
-            doc_lookup.append(int(doc))
-            ind +=1 #increment index
-        #add doctor demand to dictionary, list is demands by visit, total demand, placeholders for total capacity, team name,  team members, and capacity-demand, and finally panel size
-        phys_demand[panelTable['Physician']] = [acute_demand, prev_demand, chronic_demand, sum((acute_demand, prev_demand, chronic_demand)), None, None, None, None , num_males + num_females]
-    
-    #convert list of shared categories to indices
-    shared_categories = [category_full_to_ind(category) for category in shared_categories]
-    #save nums, freqs, durs,  category_full_to_ind, shared_categories, phys_mins
-    request.session['nums'] = nums
-    request.session['freqs'] = freqs
-    request.session['durs'] = durs
-    request.session['shared_categories'] = shared_categories
-    request.session['phys_mins'] = phys_mins
-    request.session['doc_lookup'] = doc_lookup
-    #prepare capacity
-    capacity_table = request.session['capacity_table']
-    ##phys_capacity = {}
-    team_capacity = {}  
-    ##phys_teams = {}
-    #create lookup dictionary to map patient conditions to index 
-    '''
-    category_product=itertools.product([1,2],[0,1,2,3,4,5],[0,1,2,3],phys_to_num.values())
-    category_name_key_mapping={}
-    for ind, category in enumerate(category_product):
-        category_name_key_mapping[category]=ind
-        ind_to_category[ind] = category 
-        
-    #dictionary keyed to integer representations for each key (gender, age bracket, chron condition bracket, physician)
-    request.session['category_name_key_mapping'] = category_name_key_mapping
-    request.session['ind_to_category'] = ind_to_category   
-    '''        
-    #note capacities for teams and physicians (and compile a list of physicians for each team)
-    for record in capacity_table:
-        if record['Position'] == 'Physician':
-            phys_demand[record['Provider Name']][4] = int(record['Hours Per Day'])*int(record['Days Per Year'])
-            phys_demand[record['Provider Name']][5] = record['Team'] #team name
-            #imbalance
-            phys_demand[record['Provider Name']][7] = phys_demand[record['Provider Name']][4] - phys_demand[record['Provider Name']][3]
-        try:
-            team_capacity[record['Team']][0] += [record['Position'] + record['Provider Name']]
-            team_capacity[record['Team']][1] += int(record['Hours Per Day'])*int(record['Days Per Year'])
-        except KeyError:
-            team_capacity[record['Team']] = ['','']
-            team_capacity[record['Team']][0] = [record['Position'] + record['Provider Name']]
-            team_capacity[record['Team']][1] = int(record['Hours Per Day'])*int(record['Days Per Year'])
-    for phys in phys_demand: # get list of team members for each physician
-        phys_demand[phys][6]=team_capacity[phys_demand[phys][5]][0]
-    return render(request, 'waitestapp/waitapp_utilization.html', {'phys_demand':phys_demand})
-    
-def waitapp_results(request):    
     if request.method == 'POST':
-        
-        
-        gender  = request.POST['gender']
-        gender = gender_bracket(gender)
-        age  = request.POST['gender']
-        age=int(age)        
-        chron = request.POST['chron']
-        chron=int(chron[0])
-        doc = request.POST['doc']
-        prov_to_num = request.session['prov_to_num'] 
-        doc = prov_to_num[doc]
-        visit = request.POST['visit']
-        visit = visit_bracket(visit)
-        if request.POST['type'] == 'rowSelect':
-            pass
-        
-    else:
+        #run simulator
         from  waitestapp import waitsimulator
-        nums=request.session['nums'] 
-        freqs=request.session['freqs'] 
-        durs=request.session['durs'] 
+        nums=np.array(request.session['nums']) 
+        freqs=np.array(request.session['freqs'] )
+        durs=np.array(request.session['durs'] )
         shared_categories = request.session['shared_categories'] 
         phys_mins=request.session['phys_mins'] 
-        doc_lookup= request.session['doc_lookup']
+        doc_lookup= np.array(request.session['doc_lookup'])
+        #run simulation 
         K=waitsimulator.mat_sim(cut_off=0, carve_out=False,  days=1000, freqs=freqs, durs=durs,  nums=nums, num_classes=(len(durs)/3), nurse_dict={}, phys_mins=phys_mins, doc_lookup=doc_lookup, shared_categories=shared_categories)
+        #get matrix of days waited vs patient demand class
+        request.session['wait_mat']  = K[0]
+        return HttpResponse('done')
+    else:                      
+        from itertools import product    
+        provTable = request.session['capacity_table']       
+                    
+        #parse doctors and their hours
+        prov_to_num={}
+        num_to_prov={}
+        phys_to_num={}
+        num_to_phys={}
+        phys_mins={}
+        non_phys_mins={}
+        for j, row in enumerate(provTable):
+            i = j + 1 #reserve doctor code 0 for any doctor        
+             #map names to numbers
+            print(row)
+            prov_to_num[row['Provider Name']] = i        
+            num_to_prov[i] = row['Provider Name']
+            #note pprovider avg. min per day
+            if row['Position'] == 'Physician': 
+                phys_to_num[row['Provider Name']] = i        
+                num_to_phys[i] = row['Provider Name']
+                phys_mins[i]=60*int(row['Hours Per Day'])*(int(row['Days Per Year']))/360
+            else:
+                non_phys_mins[i]=60*int(row['Hours Per Day'])*(int(row['Days Per Year']))/360
+                
+        
+        #generate list of shared categories
+        #share everything if default 
+        if request.session['defCont'] == 'share':
+            shared_categories = [categ for categ in product([1,2],[1,2,3,4,5,6], [0,1,2,3],[1,2,3],phys_to_num.values())]
+        else:
+            shared_categories = []
+        for line in request.session['cont_table']:
+            rule_dict={}
+            rule_categories=[[],[],[],[]]
+            #dictionary for each rule component
+            for ind, element in enumerate(line['Rule'].split(' ')):
+                ##print('el: %s' % element)
+                if ind % 2 == 0: # if not a boolean element
+                    rule_dict[element.split(':')[0]]=element.split(':')[1]
+            if 'Gender' in rule_dict:
+                rule_categories[0] = [2] if rule_dict['Gender']=='M' else [1] 
+            else:
+                rule_categories[0] = [1,2]
+            if 'Age' in rule_dict:
+                rule_categories[1]=list(range(age_bracket(rule_dict['Age'].split('-')[0]), age_bracket(rule_dict['Age'].split('-')[1]) + 1))
+            else:
+                rule_categories[1]=[1,2,3,4,5,6]
+            if 'Chronic' in rule_dict:
+                rule_categories[2]=list(range(chron_bracket(rule_dict['Cond'].split('-')[0]), chron_bracket(rule_dict['Age'].split('-')[1]) + 1))
+            else:
+                rule_categories[2]=[0,1,2,3]
+            if 'Visit' in rule_dict:
+                rule_categories[3]=[visit_bracket(rule_dict['Visit'])]
+            else:
+                rule_categories[3]=[1,2,3]
+            if 'Provider' in rule_dict:
+                rule_categories[4]=[phys_to_num[rule_dict['Provider']]]
+            else:
+                rule_categories[4]=phys_to_num.values()
+            # list of category integer indices for which the current rule applies
+            rule = line['Continuity']        
             
-    return render(request, 'waitestapp/waitapp_results.html', {'phys_list':request.session['phys_list']})
+            categories_affected=[categ for categ in product(rule_categories[0], rule_categories[1], rule_categories[2], rule_categories[3], rule_categories[4])]
+            
+            for category in categories_affected:
+                if rule == 'Share':
+                    shared_categories.append(category)
+                #if default share and rule is no share, remove categry from shared list
+                elif request.session['defCont'] == 'share' and rule == "Do Not Share" and (category in  shared_categories):
+                    while category in shared_categories: shared_categories.remove(category)  
+                        
+                      
+        #estimate panel composition of each based on namcs
+        request.session['prov_to_num'] = prov_to_num
+        request.session['phys_to_num'] = phys_to_num
+        panelTable = request.session['attr_table']
+        #generate panels:
+        from collections import Counter
+        #lookup index for each visit type   
+        category_full_to_ind = {}
+        nums = []
+        freqs = []
+        durs = []
+        doc_lookup = []
+        ind = 0 # start increment counter
+        phys_demand = {} #dictionary of demand per physician
+        for panel in panelTable:
+            acute_demand = 0 # start counter of demand
+            prev_demand = 0
+            chronic_demand = 0
+            doc = prov_to_num[panelTable['Physician']]
+            num_males = int(panelTable['Males'])
+            num_females = int(panelTable['Females'])
+            #generate panel accordin to male female ratio and namcs proportions
+            male_dist = Counter(np.random.choice(initial_data.female_cats, num_females, initial_data.female_p))
+            female_dist = Counter(np.random.choice(initial_data.female_cats, num_females, initial_data.female_p))
+            #get full distribution of patient types on panel
+            panel_dict = male_dist + female_dist
+            #generate import simulation data
+            for patient_category in panel_dict:
+                #ACUTE            
+                #input sex,age,chron,visit, doc           
+                category_full_to_ind[(int(patient_category[0]),int(patient_category[1]),int(patient_category[0]),1,int(doc))] = ind
+                nums.append(int(panel_dict[patient_category])) #append number represented
+                #input sex, age, chron, visit
+                freq =initial_data.freq_dict(int(patient_category[0]),int(patient_category[1]),int(patient_category[2]),1)
+                dur =initial_data.durs_dict(int(patient_category[0]),int(patient_category[1]),int(patient_category[2]),1)
+                freqs.append(freq)
+                durs.append(dur)      
+                #add to acute demand
+                acute_demand += int(panel_dict[patient_category])*freq*360*dur*(1/60)
+                doc_lookup.append(int(doc))            
+                ind += 1 #increment index
+                #PREV
+                #input sex,age,chron,visit, doc
+                category_full_to_ind[(int(patient_category[0]),int(patient_category[1]),int(patient_category[0]),2,int(doc))] = ind
+                nums.append(panel_dict[patient_category]) #append number represented
+                #input sex, age, chron, visit
+                freq = initial_data.freq_dict(int(patient_category[0]),int(patient_category[1]),int(patient_category[2]),2)
+                dur = initial_data.durs_dict(int(patient_category[0]),int(patient_category[1]),int(patient_category[2]),2)
+                freqs.append(freq)
+                durs.append(dur) 
+                #add to prev demand
+                prev_demand += int(panel_dict[patient_category])*freq*360*dur*(1/60)
+                doc_lookup.append(int(doc))
+                ind +=1 #increment index
+                #CHRONIC
+                #input sex,age,chron,visit, doc
+                category_full_to_ind[(int(patient_category[0]),int(patient_category[1]),int(patient_category[0]),3,int(doc))] = ind
+                nums.append(panel_dict[patient_category]) #append number represented
+                #input sex, age, chron, visit
+                freq =initial_data.freq_dict(int(patient_category[0]),int(patient_category[1]),int(patient_category[2]),3)
+                dur =initial_data.durs_dict(int(patient_category[0]),int(patient_category[1]),int(patient_category[2]),3)
+                freqs.append(freq)
+                durs.append(dur)   
+                #add to acute demand
+                chronic_demand += int(panel_dict[patient_category])*freq*360*dur*(1/60)
+                doc_lookup.append(int(doc))
+                ind +=1 #increment index
+            #add doctor demand to dictionary, list is demands by visit, total demand, placeholders for total capacity, team name,  team members, and capacity-demand, and finally panel size
+            phys_demand[panelTable['Physician']] = [acute_demand, prev_demand, chronic_demand, sum((acute_demand, prev_demand, chronic_demand)), None, None, None, None , num_males + num_females]
+        
+        #convert list of shared categories to indices
+        shared_categories = [category_full_to_ind(category) for category in shared_categories]
+        #save nums, freqs, durs,  category_full_to_ind, shared_categories, phys_mins
+        request.session['nums'] = nums
+        request.session['freqs'] = freqs
+        request.session['durs'] = durs
+        request.session['shared_categories'] = shared_categories
+        request.session['phys_mins'] = phys_mins
+        request.session['doc_lookup'] = doc_lookup
+        request.session['category_full_to_ind'] = category_full_to_ind
+        #prepare capacity
+        capacity_table = request.session['capacity_table']
+        ##phys_capacity = {}
+        team_capacity = {}  
+        ##phys_teams = {}
+        #create lookup dictionary to map patient conditions to index 
+        '''
+        category_product=itertools.product([1,2],[0,1,2,3,4,5],[0,1,2,3],phys_to_num.values())
+        category_name_key_mapping={}
+        for ind, category in enumerate(category_product):
+            category_name_key_mapping[category]=ind
+            ind_to_category[ind] = category 
+            
+        #dictionary keyed to integer representations for each key (gender, age bracket, chron condition bracket, physician)
+        request.session['category_name_key_mapping'] = category_name_key_mapping
+        request.session['ind_to_category'] = ind_to_category   
+        '''        
+        #note capacities for teams and physicians (and compile a list of physicians for each team)
+        for record in capacity_table:
+            if record['Position'] == 'Physician':
+                phys_demand[record['Provider Name']][4] = int(record['Hours Per Day'])*int(record['Days Per Year'])
+                phys_demand[record['Provider Name']][5] = record['Team'] #team name
+                #imbalance
+                phys_demand[record['Provider Name']][7] = phys_demand[record['Provider Name']][4] - phys_demand[record['Provider Name']][3]
+            try:
+                team_capacity[record['Team']][0] += [record['Position'] + record['Provider Name']]
+                team_capacity[record['Team']][1] += int(record['Hours Per Day'])*int(record['Days Per Year'])
+            except KeyError:
+                team_capacity[record['Team']] = ['','']
+                team_capacity[record['Team']][0] = [record['Position'] + record['Provider Name']]
+                team_capacity[record['Team']][1] = int(record['Hours Per Day'])*int(record['Days Per Year'])
+        for phys in phys_demand: # get list of team members for each physician
+            phys_demand[phys][6]=team_capacity[phys_demand[phys][5]][0]
+        return render(request, 'waitestapp/waitapp_utilization.html', {'phys_demand':phys_demand})
+    
+def waitapp_results(request):
+    waited = request.session['wait_mat'] 
+    category_full_to_ind = request.session['category_full_to_ind']
+    phys_to_num = request.session['phys_to_num']
+    doc_lookup = request.session['doc_lookup']
+    if request.method == 'POST':    
+        import json
+        
+        #change overall expected wait
+        if  request.POST['type'] ==  'overall':
+            doc = request.POST['doc']
+            exp = overall_query( doc, waited, phys_to_num, doc_lookup)
+            data = {'exp':exp}
+            return HttpResponse(json.dumps(data), content_type='application/json')
+        #change wait for individual row or query
+        elif request.POST['type'] == 'rowselect':
+            gender  = request.POST['gender']
+            gender = gender_bracket(gender)
+            age  = request.POST['gender']
+            age=int(age)        
+            chron = request.POST['chron']
+            chron=int(chron[0])
+            doc = request.POST['doc']
+            prov_to_num = request.session['prov_to_num'] 
+            doc = prov_to_num[doc]
+            visit = request.POST['visit']
+            visit = visit_bracket(visit)
+            q = request.POST['perc']
+            exp, p = table_query_generator(waited, doc, chron, gender, age, visit, q, category_full_to_ind, phys_to_num)
+            data = {'exp':exp, 'p':p}
+            return HttpResponse(json.dumps(data), content_type='application/json')
+    else:       
+        ##table_query_generator(waited, doc, cond, gender, age, visit, q, category_full_to_ind, phys_to_num)    
+        return render(request, 'waitestapp/waitapp_results.html', {'phys_list':request.session['phys_list']})
 
 def scenario_capacity(request):
     if request.method == 'POST':
@@ -577,3 +597,134 @@ def chron_bracket(chron):
         chron_bracket = 3
     return chron_bracket
         
+        
+#TABLE QUERY METHODS
+        
+#functions to generate random values    
+def type_changed(self, row, target_labels, text):
+    doc=self.HeadComboBox.currentText()
+     #PERCENTILE        
+    percentile_grid = self.SubHeadBox.currentText()[:3]
+    try:
+        percentile_grid = int(percentile_grid)
+    except ValueError:
+        percentile_grid = int(percentile_grid[:2])
+    if row == 0:
+        exp, p = self.table_query_generator(doc, int(self.SubHeadBox.currentText()[0]), self.gendRow1.currentText(), 0, self.typeRow1.currentText(), percentile_grid)
+        self.resRow1.setText(str(exp))
+        self.patRow1.setText(str(p))
+    elif row == 1:
+        exp, p = self.table_query_generator(doc, int(self.SubHeadBox.currentText()[0]), self.gendRow2.currentText(), 1, self.typeRow2.currentText(), percentile_grid)
+        self.resRow2.setText(str(exp))
+        self.patRow2.setText(str(p))
+    else:
+        exp, p = self.table_query_generator(doc, int(self.SubHeadBox.currentText()[0]), self.gendRow1.currentText(), 0, self.typeRow1.currentText(), percentile_grid)
+        self.resRow3.setText(str(exp))        
+        self.patRow3.setText(str(p))
+    
+
+def top_level_changed(self, text):
+    doc=self.HeadComboBox.currentText()
+    new_est="    Overall estimated wait time: %s days" % str(self.overall_query(doc))
+    self.estimateLabel.setText(new_est)
+    #PERCENTILE        
+    percentile_grid = self.HeadPatComboBox.currentText()[:3]
+    try:
+        percentile_grid = int(percentile_grid)
+    except ValueError:
+        percentile_grid = int(percentile_grid[:2])
+    #ADDED CHANGE       
+    exp, p = self.table_query_generator(doc, int(self.SubHeadBox.currentText()[0]), self.gendRow1.currentText(), 0, self.typeRow1.currentText(), percentile_grid)
+    self.resRow1.setText(str(exp))
+    self.patRow1.setText(str(p))
+    exp, p = self.table_query_generator(doc, int(self.SubHeadBox.currentText()[0]), self.gendRow2.currentText(), 1, self.typeRow2.currentText(), percentile_grid)
+    self.resRow2.setText(str(exp))
+    self.patRow2.setText(str(p))
+    exp, p = self.table_query_generator(doc, int(self.SubHeadBox.currentText()[0]), self.gendRow1.currentText(), 0, self.typeRow1.currentText(), percentile_grid)
+    self.resRow3.setText(str(exp))        
+    self.patRow3.setText(str(p))
+    
+def conds_changed(self, text):
+    doc=self.HeadComboBox.currentText()        
+    #PERCENTILE        
+    percentile_grid = self.HeadPatComboBox.currentText()[:3]
+    try:
+        percentile_grid = int(percentile_grid)
+    except ValueError:
+        percentile_grid = int(percentile_grid[:2])
+    #ADDED CHANGE       
+    exp, p = self.table_query_generator(doc, int(self.SubHeadBox.currentText()[0]), self.gendRow1.currentText(), 0, self.typeRow1.currentText(), percentile_grid)
+    self.resRow1.setText(str(exp))
+    self.patRow1.setText(str(p))
+    exp, p = self.table_query_generator(doc, int(self.SubHeadBox.currentText()[0]), self.gendRow2.currentText(), 1, self.typeRow2.currentText(), percentile_grid)
+    self.resRow2.setText(str(exp))
+    self.patRow2.setText(str(p))
+    exp, p = self.table_query_generator(doc, int(self.SubHeadBox.currentText()[0]), self.gendRow1.currentText(), 0, self.typeRow1.currentText(), percentile_grid)
+    self.resRow3.setText(str(exp))        
+    self.patRow3.setText(str(p))
+    
+def exp_percentile(self, matrix, percentile):
+    import numpy as np
+    try:
+        dist=np.sum(matrix, axis=1)
+        
+    except ValueError:
+        dist=matrix
+    print(dist)
+    exp=sum(dist*np.array(range(0,1000)))/sum(dist)
+    percentile=int(round(np.percentile(np.repeat(np.array(range(0,1000)),dist), percentile)))
+    #CHECK HERE 
+    try:
+        exp=int(exp)
+    except TypeError:
+        exp=int(sum(exp))        
+    return exp, percentile        
+ 
+# get overall estimate
+def overall_query( doc, waited, phys_to_num, doc_lookup):
+    import numpy as np
+    if not doc == 'Overall':
+        #get provider integer code for doctor specified in dropdown
+        doc_code=phys_to_num[doc]
+        #get column indices whose provider (mapped to by doc_pat_index) matches the comboBox selection indicated by doc_code
+        columns_relevant=np.where(doc_lookup == doc_code)[0]
+                  
+        matrix= waited[:,columns_relevant]
+    else:
+        matrix= waited
+    try:
+        dist=np.sum(matrix, axis=1) # might fail to sum if only one column
+    except ValueError:
+        dist=matrix
+    exp=sum(dist*np.array(range(0,1000)))/sum(dist)
+    #CHECK HERE 
+    try:
+        exp=int(exp)
+    except TypeError:
+        exp=int(sum(exp))
+    return exp
+    
+def table_query_generator(waited, doc, cond, gender, age, visit, q, category_full_to_ind, phys_to_num):
+    #get integer category
+    ##gender= 2 if (gender == 'M') else 1       
+    if not doc == 'Overall':       
+        try: # get index of patient type in question
+            category=category_full_to_ind[(gender, age, cond, visit, phys_to_num[doc])]            
+        except KeyError:
+            exp, percentile = ('N/A', 'N/A')
+        else:
+            #get expected value and percentile of appropriate column
+            try: 
+                exp, percentile = exp_percentile(waited[:,category], q)
+            except ValueError:
+                exp, percentile = ('N/A', 'N/A')
+    else:
+       
+        indices = [category_full_to_ind[(gender, age_bracket(age), chron_bracket(cond), visit_bracket(visit), phys_to_num[phys])] for phys in phys_to_num]         
+         
+        try:
+            exp, percentile = exp_percentile(waited[:,indices], q)
+        except ValueError:
+            exp, percentile = ('N/A', 'N/A')
+        
+    return exp, percentile
