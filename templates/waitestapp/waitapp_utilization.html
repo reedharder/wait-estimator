@@ -23,10 +23,47 @@
 			</div>
 			
 			<h3>Patient Utilization</h3>
-			<p>Enter information about average patient utilization of services:</p>
+			<p>Utilization of services for each physician:</p>
 			<br>
-			
+			<table id="utilgrid">
+				<tr>
+					<td><strong>Physician</strong></td> <!--name -->
+					<td><strong>Panel Size</strong></td> <!-- panel size -->					
+					<td><strong> Team </strong></td>
+					<td><strong>Capacity</strong></td> <!-- capacity -->
+					<td><strong>Demand</strong></td> <!-- demand -->
+					<td><strong>Imbalance}</strong></td> <!-- imbalance -->
+				</tr>
+				{% for phys in phys_demand %}
+				<tr>
+					<td>{{ phys }}</td> <!--name -->
+					<td>{{ phys_demand.phys.8 }}</td> <!-- panel size -->					
+					<td> <!-- staff -->
+						<ul>
+							<li><strong>{{ phys_demand.phys.5 }}:</strong></li> <!-- team name -->
+							{% for staff in phys_demand.phys.6 %}
+							<li>{{ staff }}</li>
+							{% endfor %}
+						</ul>
+					</td>
+					<td>{{ phys_demand.phys.4 }}</td> <!-- capacity -->
+					<td>{{ phys_demand.phys.3 }}</td> <!-- demand -->
+					<td>{{ phys_demand.phys.7 }}</td> <!-- imbalance -->
+				</tr>
+				{% endfor %}
+			</table>
+			<br>
+			<div>
+				<label>Demand by Visit Type</label>
+				<select id="graphSelect">
+					<option>Acute</option>
+					<option>Preventative</option>
+					<option>Chronic</option>
+				</select>
+			<div>
+			<div id="demandGraph"></div>
 			<!-- Rule Form -->
+			<!--
 			<div id="utilGrid" style="display: table;">
 				<div id="utilRow1" style="display: table-row;">
 					
@@ -50,6 +87,7 @@
 						<div style="display: table-cell;"><form><input type="number" min="0" step="1" value="15" style="width:50px;" required></form></div>												
 				</div>
 			</div>
+			-->
 			
 		<br>    
 		
@@ -111,21 +149,44 @@ $(document).ready( function() {
 });
 </script>
 
-<!-- bootstrap table script -->
-<script src="{% static 'js/bootstrap-table.min.js' %}"></script>
-<script src="{% static 'js/jquery.tabletojson.min.js' %}"></script>
+<!-- bootstrap graph script -->
+<script src="{% static 'js/jqBarGraph.1.1.min.js' %}"></script>
+
 <!--table functionality and toggle show/hide table script -->
 <script language="javascript">
-//set table properties
-$('#patTable').bootstrapTable({
-    cache: false,	
-	height: 400,
-	striped: true,
-	pagination: true,
-	pageSize: 50,
-	pageList: [10, 25, 50, 100, 200],
-	search: true,	
-	clickToSelect: true,
+//create graphs
+acuteData = new Array(
+	{% for phys in phys_demand %}
+   	[{{phys_demand.phys.1}},'{{phys}}','{% cycle '#c90707' '#fd482f' %}'],
+	{% endfor %}   	
+); 
+
+prevData = new Array(
+   {% for phys in phys_demand %}
+   	[{{phys_demand.phys.2}},'{{phys}}','{% cycle '#064222' '#11a523' %}'],
+	{% endfor %}   
+); 
+
+chronicData = new Array(
+   	{% for phys in phys_demand %}
+   	[{{phys_demand.phys.3}},'{{phys}}','{% cycle '#11187c' '#1f2bd4' %}'],
+	{% endfor %}   
+); 
+
+//initial graph
+$('#demandGraph').jqBarGraph({ data: acuteData, }); 
+
+//graph chage mechanism
+$('#graphSelect').on('change', function() {
+	if ($(this).val() == "Acute"){
+		$('#demandGraph').jqBarGraph({ data: acuteData, }); 
+	} 
+	else if ($(this).val() == "Preventative") {
+		$('#demandGraph').jqBarGraph({ data: prevData, });
+	}
+	else if ($(this).val() == "Chronic") {
+		$('#demandGraph').jqBarGraph({ data: chronicData, });
+	}
 });
 
 //csrf config for ajax
@@ -213,50 +274,9 @@ $('.submitCatch').click(function(e) {
 });
 */
 
-//add to table with addProv button CURRENTLY NON FUNCTIONAL
-$('#addProv').click(function () {
-	//get form values in array
-	var values = {};
-	$.each($('#addForm').serializeArray(), function(i, field) {
-		values[field.name] = field.value;		
-	});
-	values['state']=""
-	
-	$('#patTable').bootstrapTable('append-data', {
-		data: values
-	});
-	
-});
-	
 
-//delete selected rows button
-$('#remove-data').click(function () {
-	var selects = $('#patTable').bootstrapTable('getSelections');
-		states = $.map(selects, function (row) {
-			return row.state;
-		});
 
-	$('#patTable').bootstrapTable('remove', {
-		field: 'state',
-		values: states
-	});
-});
 
-$(document).ready(function(){
- //var $table = $("#provTable");
-   
-  $("#tableDiv").hide();
-  $("#toggleTable").click(function(){
-    var button_name = $("#toggleTable").text();
-    if (button_name == "Show Service Load Panel") {
-        $("#toggleTable").text("Hide Service Load Panel") 
-    }
-    else {
-        $("#toggleTable").text("Show Service Load Panel")
-    }        
-    $("#tableDiv").toggle();
-  });
-});
 </script>
 
 {% endblock %} 

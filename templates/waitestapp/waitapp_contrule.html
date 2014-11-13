@@ -29,9 +29,9 @@
 			
 			<form>
 				<label>Default continuity strategy:</label>
-				<select id="defCont">
-					<option value="share">Share</option>
+				<select id="defCont">					
 					<option value="noshare">Do Not Share</option>
+					<option value="share">Share</option>
 				</select>		
 			</form>
 			<br>		
@@ -45,15 +45,15 @@
 					</select>					
 				</div>
 				<div style="padding-bottom:10px;">
-					<input class="Check"  type="checkbox" name="agerange" value="Age Range"> &nbsp;Age Range: &nbsp;					
+					<input class="Check"  type="checkbox" name="agerange" value="Age"> &nbsp;Age Range: &nbsp;					
 					<input class="rule-form"  type="text"  name="agerange-rule" id="agerange-rule" placeholder="0-100" style="max-width:45px;">					
 				</div>
 				<div class="contRule" style="padding-bottom:10px;">
-					<input class="Check"  type="checkbox" name="condrange" value="# Chronic Conditions"> &nbsp; # Conditions:					
+					<input class="Check"  type="checkbox" name="condrange" value="Chronic"> &nbsp; # Conditions:					
 					<input class="rule-form"  type="text" name="condrange-rule" id="condrange-rule" placeholder="0-100" style="max-width:45px;">					
 				</div>
 				<div class="contRule" style="padding-bottom:10px;">
-					<input class="Check" type="checkbox" name="visit" value="Visit Type"> &nbsp; Visit Type:					
+					<input class="Check" type="checkbox" name="visit" value="Visit"> &nbsp; Visit Type:					
 					<select class="rule-form"  name="visit-rule" style="width:100px;">
 						<option>Acute</option>
 						<option>Preventative</option>
@@ -61,7 +61,7 @@
 					</select>					
 				</div>
 				<div class="contRule" style="padding-bottom:10px;">
-					<input class="Check"  type="checkbox" name="affiliation" value="Physician"> &nbsp; Affiliation:					
+					<input class="Check"  type="checkbox" name="affiliation" value="Provider"> &nbsp; Affiliation:					
 					<select class="rule-form"  name="affiliation-rule" id="affiliation-rule" style="width:100px;">
 					    {% for phys in phys_list %}
 						<option>{{phys}}</option>

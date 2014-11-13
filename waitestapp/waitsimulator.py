@@ -7,9 +7,8 @@ Created on Tue Nov 11 20:16:02 2014
 
 
 import numpy as np
-from collections import Counter
-from itertools import product
 
+'''
 #acute, prev, chron
 #number of patient categories (not differentiated by visit type)
 num_classes=96
@@ -29,14 +28,16 @@ non_phys_mins={1:480,2:480}
 nurse_dict={1:[1,2],2:[2]}
 #index is class, value is affiliated doctor. 0 is ANY DOCTOR
 doc_lookup=np.array([1,2,3,4]*(24*3))
-
+'''
 
 #np.repeat(np.array([0,1,2,3,4]),np.array([0,72,72,72,72]))
 #cutoffs for wait times for each class and overall, (percentage, limit)
+'''
 exp_sload={'Acute':(100,50), 'Preventative':(100,50) , 'Chronic': (100,50), 'Overall':(100,50) ,} 
+'''
 days=1000
 
-def mat_sim(cut_off=0, carve_out=True, urgencies=urgencies, phys_carve_out=phys_carve_out, days=days, freqs=freqs, durs=durs,  nums=nums, num_classes=96, nurse_dict=nurse_dict, doc_lookup=doc_lookup):
+def mat_sim(cut_off=0, carve_out=True, days, freqs, durs,  nums, num_classes, nurse_dict, doc_lookup, phys_mins, shared_categories):
     #initialize matrix of fistrubution of waiting times for all classes
     waited=np.zeros((days, num_classes*3), dtype=int)
     #idles times per day for each doctor
@@ -76,7 +77,7 @@ def mat_sim(cut_off=0, carve_out=True, urgencies=urgencies, phys_carve_out=phys_
             #lookup doc
             relevant_doc = doc_lookup[patient]
             #if any doc can be used, assign to doc with shortest backlog
-            if relevant_doc == 0:
+            if patient in shared_categories:
                 #build dictionary of doctors and the length of their queue (in days, so relative to hours worked per day)                
                     #pass relative wait function v=minutes in backlog, and phys_mins[k]=mins worked per day by physician k
                 doc_backlogs={k:relative_wait(v, phys_mins[k]) for k,v in doc_lines}
@@ -86,7 +87,7 @@ def mat_sim(cut_off=0, carve_out=True, urgencies=urgencies, phys_carve_out=phys_
             #get expected patient duration
             curr_dur=durs[patient]
             #if following carve out policy and patient is urgent, attempt to put in a same day carve_out KEEP TRACK OF URGENT PATIENTS THAT WERE NOT SEEN            
-            if carve_out and urgencies[patient]:     
+            if carve_out:    
                 #if urgent patient can be accomadated in carve out...
                 if curr_carve_out[relevant_doc] - curr_dur > 0 :
                     
@@ -161,7 +162,7 @@ def mat_sim(cut_off=0, carve_out=True, urgencies=urgencies, phys_carve_out=phys_
         sload_dict['Overall']=True
         
     
-    return (waited, demand_matrix, daily_demands, daily_supplys, urgent_patients_missed)
+    return (waited, demand_matrix)
         
 
         
@@ -193,28 +194,28 @@ def coding_for_provider(provider_type):
 def visit_bracket(visit):
             
     if visit == 'Acute':
-        visit_bracket = 0
-    elif visit == 'Preventative':
         visit_bracket = 1
-    else:
+    elif visit == 'Preventative':
         visit_bracket = 2
+    else:
+        visit_bracket = 3
     return visit_bracket
     
 #sorts age into an age bin    
 def age_bracket(age):
     age= int(age)        
     if age <15:
-        age_bracket = 0
-    elif age >= 15 and age <=24:
         age_bracket = 1
+    elif age >= 15 and age <=24:
+        age_bracket = 2
     elif age >= 25 and age <=44:
-        age_bracket =2
-    elif age >= 45 and age <=64:
         age_bracket =3
-    elif age >= 65 and age <=74:
+    elif age >= 45 and age <=64:
         age_bracket =4
+    elif age >= 65 and age <=74:
+        age_bracket =5
     else:
-        age_bracket = 5
+        age_bracket = 6
     return age_bracket
     
    
