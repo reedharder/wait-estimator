@@ -44,7 +44,7 @@ def mat_sim(cut_off, carve_out, days, freqs, durs,  nums, num_classes, nurse_dic
     ##idle_time_dict={k:[0]*days for k in phys_mins}
     #backlog for each doctor
     doc_lines={key:0 for key in phys_mins.keys()}
-    print(doc_lines)
+    ##print(doc_lines)
     # number of urgent patients not seen same day
     urgent_patients_missed = 0 #CALCULATE URGENT PATIENTS TOTAL
     # ADD PATIENT WAITING CUTTOFFS AND TOTAL CUTTOFFS. STOP SIM? OR JUST ALERT    
@@ -81,9 +81,9 @@ def mat_sim(cut_off, carve_out, days, freqs, durs,  nums, num_classes, nurse_dic
             if patient in shared_categories:
                 #build dictionary of doctors and the length of their queue (in days, so relative to hours worked per day)                
                     #pass relative wait function v=minutes in backlog, and phys_mins[k]=mins worked per day by physician k
-                print(doc_lines)
+                ##print(doc_lines)
                 doc_backlogs={k:relative_wait(v, phys_mins[k]) for k,v in doc_lines.items()}
-                print(doc_lines)
+                ##print(doc_lines)
                 #take doc with smallest number of days in backlog                
                 relevant_doc = min(doc_backlogs.keys(), key=(lambda key: doc_backlogs[key]))
             
@@ -132,7 +132,7 @@ def mat_sim(cut_off, carve_out, days, freqs, durs,  nums, num_classes, nurse_dic
                     except IndexError:
                         pass
             wait_times.append(wait_time)
-        print(max(wait_times))
+        ##print(max(wait_times))
 
                     
             #RECORD WASTED TIME FOR DOCTORS THAT HAVE LESS THAN DAY WAIT AND ALSO RECORD UNUSED TIME SET ASIDE

@@ -27,7 +27,10 @@ attr_json = [{"Physician":"Doctor 1", "Males":"900", "Females":"900", "Panel_Siz
 
 cont_json = [{"Rule":"Gender:M AND Age:0-24 AND Visit:Acute","Continuity":"Share"}]                 
 
-del_json = [{"Rule":"Gender:F AND Age:0-24 AND Visit:Acute","Delegation":"Nurse 1"}]
+#no initial data for del rules for now, only implemented in scenario
+del_json = []##[{"Rule":"Gender:F AND Age:0-24 AND Visit:Acute","Delegation":"Nurse 1"}]
+
+del_json_scenario = [{"Rule":"Gender:F AND Age:0-24 AND Visit:Acute","Delegation":"Nurse 1"}]
 
 pat_json = [{"Patient_Name":"Patient A","Patient_Gender":"M","Age":"24","Chronic_Conditions":"0"},
             {"Patient_Name":"Patient B","Patient_Gender":"F","Age":"58","Chronic_Conditions":"2"},

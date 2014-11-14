@@ -50,6 +50,14 @@
 						<option>Chronic</option>
 					</select>
 				</div>
+				<div class="contRule" style="padding-bottom:10px;">
+					<input class="Check"  type="checkbox" name="affiliation" value="Provider"> &nbsp; Affiliation:					
+					<select class="rule-form"  name="affiliation-rule" id="affiliation-rule" style="width:100px;">
+					    {% for phys in phys_list %}
+						<option>{{phys}}</option>
+						{% endfor %}
+					</select>			
+				</div>
 				<div style="padding-bottom:10px;">
 					<input class="Check" type="checkbox" name="patient" value="Patient"> &nbsp; Patient Name:
 					<input class="rule-form" type="text" placeholder="Enter Patient Name" name="patient-rule" id="patient-rule" style="width:150px;">

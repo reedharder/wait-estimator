@@ -175,7 +175,7 @@ def waitapp_delrule(request):
         table_data = initial_data.del_json 
     else:
         table_data = key_clean(table_data)
-    return render(request, 'waitestapp/waitapp_delrule.html', {'nonphys_list':request.session['nonphys_list'],'table_data':table_data})
+    return render(request, 'waitestapp/waitapp_delrule.html', {'phys_list':request.session['phys_list'],'nonphys_list':request.session['nonphys_list'],'table_data':table_data})
 
 def waitapp_utilization(request):#get doctors in list
     import numpy as np
@@ -190,6 +190,7 @@ def waitapp_utilization(request):#get doctors in list
         durs=np.array(request.session['durs'] )
         shared_categories = request.session['shared_categories'] 
         phys_mins=ast.literal_eval(request.session['phys_mins']) 
+        non_phys_mins=ast.literal_eval(request.session['non_phys_mins'])
         print(phys_mins)
         doc_lookup= np.array(request.session['doc_lookup'])
         from collections import Counter
@@ -218,8 +219,7 @@ def waitapp_utilization(request):#get doctors in list
             i = j + 1 #reserve doctor code 0 for any doctor        
              #map names to numbers
             print(row)
-            prov_to_num[row['Provider Name']] = i        
-            num_to_prov[i] = row['Provider Name']
+           
             #note pprovider avg. min per day
             if row['Position'] == 'Physician': 
                 phys_to_num[row['Provider Name']] = i        
@@ -227,7 +227,8 @@ def waitapp_utilization(request):#get doctors in list
                 phys_mins[i]=60*int(row['Hours Per Day'])*(int(row['Days Per Year']))/360
             else:
                 non_phys_mins[i]=60*int(row['Hours Per Day'])*(int(row['Days Per Year']))/360
-                
+                prov_to_num[row['Provider Name']] = i        
+                num_to_prov[i] = row['Provider Name']
         
         #generate list of shared categories
         #share everything if default 
@@ -239,10 +240,9 @@ def waitapp_utilization(request):#get doctors in list
             rule_dict={}
             rule_categories=[[],[],[],[],[]]
             #dictionary for each rule component
-            for ind, element in enumerate(line['Rule'].split(' ')):
-                ##print('el: %s' % element)
-                if ind % 2 == 0: # if not a boolean element
-                    rule_dict[element.split(':')[0]]=element.split(':')[1]
+            for ind, element in enumerate(line['Rule'].split('AND')):
+                element.lstrip().rstrip()
+                rule_dict[element.split(':')[0]]=element.split(':')[1]
             if 'Gender' in rule_dict:
                 rule_categories[0] = [2] if rule_dict['Gender']=='M' else [1] 
             else:
@@ -378,6 +378,8 @@ def waitapp_utilization(request):#get doctors in list
         request.session['shared_categories'] = shared_categories
         print(5)
         request.session['phys_mins'] = str(phys_mins)
+        request.session['non_phys_mins'] = str(non_phys_mins)
+        
         print(6)
         request.session['doc_lookup'] = doc_lookup
         print(7)
@@ -561,10 +563,10 @@ def scenario_delrule(request):
     try: 
         table_data = request.session['s_del_table']
     except KeyError:
-        table_data = request.session['del_table'] 
+        table_data = initial_data.del_json_scenario ## NOT UNTIL IMPLEMENTED? request.session['del_table'] 
     else:
         table_data = key_clean(table_data)
-    return render(request, 'waitestapp/scenario_delrule.html', {'nonphys_list':request.session['s_nonphys_list'],'table_data':table_data})
+    return render(request, 'waitestapp/scenario_delrule.html', {'phys_list':request.session['s_phys_list'], 'nonphys_list':request.session['s_nonphys_list'],'table_data':table_data})
 
     
 
@@ -580,7 +582,9 @@ def scenario_utilization(request):
         freqs=np.array(request.session['s_freqs'] )
         durs=np.array(request.session['s_durs'] )
         shared_categories = request.session['s_shared_categories'] 
-        phys_mins=ast.literal_eval(request.session['s_phys_mins']) 
+        phys_mins=ast.literal_eval(request.session['s_phys_mins'])
+        non_phys_mins=ast.literal_eval(request.session['s_non_phys_mins'])
+        nurse_dict = ast.literal_eval(request.session['s_nurse_dict']) # ADD LATER TO WAITAPP
         print(phys_mins)
         doc_lookup= np.array(request.session['s_doc_lookup'])
         from collections import Counter
@@ -588,7 +592,7 @@ def scenario_utilization(request):
         #run simulation 
         print("simulating")
         
-        K=waitsimulator.mat_sim(cut_off=0, carve_out=False,  days=500, freqs=freqs, durs=durs,  nums=nums, num_classes=len(durs), nurse_dict={}, phys_mins=phys_mins, non_phys_mins={}, doc_lookup=doc_lookup, shared_categories=shared_categories)
+        K=waitsimulator.mat_sim(cut_off=0, carve_out=False,  days=500, freqs=freqs, durs=durs,  nums=nums, num_classes=len(durs), nurse_dict=nurse_dict, phys_mins=phys_mins, non_phys_mins=non_phys_mins, doc_lookup=doc_lookup, shared_categories=shared_categories)
         print("storing...")
         #get matrix of days waited vs patient demand class
         request.session['s_wait_mat']  = K[0].tolist()
@@ -600,7 +604,7 @@ def scenario_utilization(request):
                     
         #parse doctors and their hours
         prov_to_num={}
-        num_to_prov={}
+        num_to_prov={} #non physosian providers
         phys_to_num={}
         num_to_phys={}
         phys_mins={}
@@ -609,8 +613,7 @@ def scenario_utilization(request):
             i = j + 1 #reserve doctor code 0 for any doctor        
              #map names to numbers
             print(row)
-            prov_to_num[row['Provider Name']] = i        
-            num_to_prov[i] = row['Provider Name']
+            
             #note pprovider avg. min per day
             if row['Position'] == 'Physician': 
                 phys_to_num[row['Provider Name']] = i        
@@ -618,7 +621,8 @@ def scenario_utilization(request):
                 phys_mins[i]=60*int(row['Hours Per Day'])*(int(row['Days Per Year']))/360
             else:
                 non_phys_mins[i]=60*int(row['Hours Per Day'])*(int(row['Days Per Year']))/360
-                
+                prov_to_num[row['Provider Name']] = i        
+                num_to_prov[i] = row['Provider Name']
         
         #generate list of shared categories
         #share everything if default 
@@ -630,10 +634,9 @@ def scenario_utilization(request):
             rule_dict={}
             rule_categories=[[],[],[],[],[]]
             #dictionary for each rule component
-            for ind, element in enumerate(line['Rule'].split(' ')):
-                ##print('el: %s' % element)
-                if ind % 2 == 0: # if not a boolean element
-                    rule_dict[element.split(':')[0]]=element.split(':')[1]
+            for ind, element in enumerate(line['Rule'].split('AND')):
+                element = element.lstrip().rstrip()                
+                rule_dict[element.split(':')[0]]=element.split(':')[1]
             if 'Gender' in rule_dict:
                 rule_categories[0] = [2] if rule_dict['Gender']=='M' else [1] 
             else:
@@ -671,6 +674,49 @@ def scenario_utilization(request):
         request.session['s_prov_to_num'] = prov_to_num
         request.session['s_phys_to_num'] = phys_to_num
         panelTable = request.session['s_attr_table']
+        
+        #Parse delegation rules
+        nurse_dict={} #dictionary, keys: patients values: list of nurses that can provide for them
+        for line in request.session['s_del_table']:
+            rule_dict={}
+            rule_categories=[[],[],[],[],[]]
+            for ind, element in enumerate(line['Rule'].split('AND')):
+                element = element.lstrip().rstrip()
+                rule_dict[element.split(':')[0]]=element.split(':')[1]
+            if 'Gender' in rule_dict:
+                rule_categories[0] = [2] if rule_dict['Gender']=='M' else [1] 
+            else:
+                rule_categories[0] = [1,2]
+            if 'Age' in rule_dict:
+                rule_categories[1]=list(range(age_bracket(rule_dict['Age'].split('-')[0]), age_bracket(rule_dict['Age'].split('-')[1]) + 1))
+            else:
+                rule_categories[1]=[1,2,3,4,5,6]
+            if 'Chronic' in rule_dict:
+                rule_categories[2]=list(range(chron_bracket(rule_dict['Cond'].split('-')[0]), chron_bracket(rule_dict['Age'].split('-')[1]) + 1))
+            else:
+                rule_categories[2]=[0,1,2,3]
+            if 'Visit' in rule_dict:
+                rule_categories[3]=[visit_bracket(rule_dict['Visit'])]
+            else:
+                rule_categories[3]=[1,2,3]
+            if 'Provider' in rule_dict:
+                rule_categories[4]=[phys_to_num[rule_dict['Provider']]]
+            else:
+                rule_categories[4]=phys_to_num.values() 
+            
+            rule = line['Delegation'] # name of non physisian provider
+            # list of category integer indices for which the current rule applies
+           
+            categories_affected=[categ for categ in product(rule_categories[0], rule_categories[1], rule_categories[2], rule_categories[3], rule_categories[4])]
+            
+            #add nurse to approriate patient
+            for category in categories_affected:
+                if category in nurse_dict: 
+                    nurse_dict[category] += [prov_to_num[rule]]
+                else:
+                    nurse_dict[category] = [prov_to_num[rule]]
+        #save to session          
+        request.session['s_nurse_dict'] =str(nurse_dict)
         #generate panels:
         from collections import Counter
         #lookup index for each visit type   
@@ -769,6 +815,7 @@ def scenario_utilization(request):
         request.session['s_shared_categories'] = shared_categories
         print(5)
         request.session['s_phys_mins'] = str(phys_mins)
+        request.session['s_non_phys_mins'] = str(non_phys_mins)
         print(6)
         request.session['s_doc_lookup'] = doc_lookup
         print(7)
