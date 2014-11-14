@@ -117,13 +117,13 @@
 			</tr>
 		</thead>
 		<tbody>
-		{% for row in table_data %}
-		<tr>
-			<td></td>
-			<td>{{row.Rule}}</td>
-			<td>{{row.Continuity}}</td>   	
-		</tr>    
-		{% endfor %}
+			{% for row in table_data %}
+			<tr>
+				<td></td>
+				<td>{{row.Rule}}</td>
+				<td>{{row.Continuity}}</td>   	
+			</tr>    
+			{% endfor %}
 		</tbody>
 	</table>
 	<button class="btn btn-default" id="remove-data" data-method="remove">
@@ -173,7 +173,7 @@ $(document).ready( function() {
 //set table properties
 $('#contRuleTable').bootstrapTable({
     cache: false,	
-	height: 400,
+	//height: 200,
 	striped: true,
 	pagination: true,
 	pageSize: 50,
@@ -233,7 +233,7 @@ $('.submitPrev').click(function(e) {
 	e.preventDefault(); //don't follow link yet
 	var table = $('#contRuleTable').tableToJSON({ ignoreColumns: [0], ignoreHiddenRows: false });
 	table  = JSON.stringify(table);
-	alert(table);
+	//alert(table);
 	var defCont = $('#defCont').val();	
 	//stick stringified JSON of table into hidden form and submit	
 	$.ajax({      
@@ -241,7 +241,7 @@ $('.submitPrev').click(function(e) {
 	  type: "POST",
       data : {'id_table': table, 'defCont': defCont},       
       success: function() {
-	   alert("data recieved!");
+	   //alert("data recieved!");
        $( "#prevPage" )[0].click();   
       }
     });
@@ -253,16 +253,16 @@ $('.submitCatch').click(function(e) {
 	e.preventDefault(); //don't follow link yet
 	var table = $('#contRuleTable').tableToJSON({ ignoreColumns: [0], ignoreHiddenRows: false });
 	table  = JSON.stringify(table);
-	alert(table);
+	//alert(table);
 	var defCont = $('#defCont').val();
-	alert(defCont);
+	//alert(defCont);
 	//stick stringified JSON of table into hidden form and submit	
 	$.ajax({      
 	  url: "?",
 	  type: "POST",
       data : {'id_table': table, 'defCont': defCont},       
       success: function() {
-	   alert("data recieved!");
+	   //alert("data recieved!");
        $( "#nextPage" )[0].click();   
       }
     });
@@ -319,7 +319,7 @@ $('#addContRule').click(function () {
 		$('#contRuleTable').append(row);
 		$('#contRuleTable').bootstrapTable({
 			cache: false,
-			height: 400,
+			//height: 200,
 			striped: true,
 			pagination: true,
 			pageSize: 50,

@@ -26,43 +26,48 @@
 			<h3>Patient Utilization</h3>
 			<p>Utilization of services for each physician:</p>
 			<br>
-			<table id="utilgrid">
-				<tr>
-					<td><strong>Physician</strong></td> <!--name -->
-					<td><strong>Panel Size</strong></td> <!-- panel size -->					
-					<td><strong> Team </strong></td>
-					<td><strong>Capacity</strong></td> <!-- capacity -->
-					<td><strong>Demand</strong></td> <!-- demand -->
-					<td><strong>Imbalance}</strong></td> <!-- imbalance -->
-				</tr>
-				{% for phys in phys_demand %}
-				<tr>
-					<td>{{ phys }}</td> <!--name -->
-					<td>{{ phys_demand.phys.8 }}</td> <!-- panel size -->					
-					<td> <!-- staff -->
-						<ul>
-							<li><strong>{{ phys_demand.phys.5 }}:</strong></li> <!-- team name -->
-							{% for staff in phys_demand.phys.6 %}
-							<li>{{ staff }}</li>
-							{% endfor %}
-						</ul>
-					</td>
-					<td>{{ phys_demand.phys.4 }}</td> <!-- capacity -->
-					<td>{{ phys_demand.phys.3 }}</td> <!-- demand -->
-					<td>{{ phys_demand.phys.7 }}</td> <!-- imbalance -->
-				</tr>
-				{% endfor %}
-			</table>
+			<div id="borderTable" style="border:1px solid black; padding:30px;">
+				<table id="utilgrid">
+					<tr>
+						<td><strong>Physician</strong></td> 
+						<td><strong>Panel Size</strong></td> 				
+						<td><strong> Team </strong></td>
+						<td><strong>Capacity</strong></td> 
+						<td><strong>Demand</strong></td> 
+						<td><strong>Imbalance</strong></td> 
+					</tr>
+					{% for phys, values in phys_demand.items %}
+					<tr>
+						<td>{{ phys }}</td> 
+						<td>{{ values.8 }}</td>				
+						<td> 
+							<h6><strong>{{ values.5 }}:</strong></h6> 
+							<ul>
+								
+								{% for staff in values.6 %}
+								<li><h6>{{ staff }}</h6></li>
+								{% endfor %}
+							</ul>
+						</td>
+						<td>{{ values.4 | floatformat:"0" }}</td> 
+						<td>{{ values.3 | floatformat:"0" }}</td> 
+						<td>{{ values.7  | floatformat:"0"}}</td> 
+					</tr>
+					{% endfor %}
+				</table>
+			</div>
 			<br>
-			<div>
-				<label>Demand by Visit Type</label>
-				<select id="graphSelect">
-					<option>Acute</option>
-					<option>Preventative</option>
-					<option>Chronic</option>
-				</select>
-			<div>
-			<div id="demandGraph"></div>
+			<div id="borderGraph" style="border:1px solid black; padding:30px;">
+				<div>
+					<label>Demand by Visit Type:</label>
+					<select id="graphSelect">
+						<option>Acute</option>
+						<option>Preventative</option>
+						<option>Chronic</option>
+					</select>
+				</div>
+				<div id="demandGraph"></div>
+			</div>
 			<!-- Rule Form -->
 			<!--
 			<div id="utilGrid" style="display: table;">
@@ -155,22 +160,23 @@ $(document).ready( function() {
 
 <!--table functionality and toggle show/hide table script -->
 <script language="javascript">
+
 //create graphs
 acuteData = new Array(
-	{% for phys in phys_demand %}
-   	[{{phys_demand.phys.1}},'{{phys}}','{% cycle '#c90707' '#fd482f' %}'],
+	{% for phys, values in phys_demand.items %}	
+   	[{{values.1 | floatformat:"0"}},'{{phys}}','{% cycle '#c90707' '#fd482f' %}']{% if not forloop.last %},{% endif %}	
 	{% endfor %}   	
 ); 
 
 prevData = new Array(
-   {% for phys in phys_demand %}
-   	[{{phys_demand.phys.2}},'{{phys}}','{% cycle '#064222' '#11a523' %}'],
+   {% for phys, values in phys_demand.items %}  
+   	[{{values.2 | floatformat:"0"}},'{{phys}}','{% cycle '#064222' '#11a523' %}'] {% if not forloop.last %},{% endif %}		
 	{% endfor %}   
 ); 
 
 chronicData = new Array(
-   	{% for phys in phys_demand %}
-   	[{{phys_demand.phys.3}},'{{phys}}','{% cycle '#11187c' '#1f2bd4' %}'],
+   	{% for phys, values in phys_demand.items %}	
+   	[{{values.3 | floatformat:"0"}},'{{phys}}','{% cycle '#11187c' '#1f2bd4' %}']{% if not forloop.last %},{% endif %}	
 	{% endfor %}   
 ); 
 
@@ -179,6 +185,7 @@ $('#demandGraph').jqBarGraph({ data: acuteData, });
 
 //graph chage mechanism
 $('#graphSelect').on('change', function() {
+	$('#demandGraph').html('');
 	if ($(this).val() == "Acute"){
 		$('#demandGraph').jqBarGraph({ data: acuteData, }); 
 	} 
@@ -264,9 +271,9 @@ $('.submitCatch').click(function(e) {
 	$.ajax({      
 	  url: "?",
 	  type: "POST",
-      data : {'alert'     
+      data : {'alert':'ok'},     
       success: function() {
-	   alert("data recieved!");
+	   //alert("data recieved!");
 	   $("#imgProgress").hide();
        $( "#nextPage" )[0].click();   
       }

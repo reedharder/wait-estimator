@@ -35,23 +35,24 @@ doc_lookup=np.array([1,2,3,4]*(24*3))
 '''
 exp_sload={'Acute':(100,50), 'Preventative':(100,50) , 'Chronic': (100,50), 'Overall':(100,50) ,} 
 '''
-days=1000
+days=500
 
-def mat_sim(cut_off=0, carve_out=True, days, freqs, durs,  nums, num_classes, nurse_dict, doc_lookup, phys_mins, shared_categories):
-    #initialize matrix of fistrubution of waiting times for all classes
-    waited=np.zeros((days, num_classes*3), dtype=int)
+def mat_sim(cut_off, carve_out, days, freqs, durs,  nums, num_classes, nurse_dict, doc_lookup, phys_mins, non_phys_mins, shared_categories):
+    #initialize matrix of distrubution of waiting times for all classes
+    waited=np.zeros((days, num_classes), dtype=int)
     #idles times per day for each doctor
     ##idle_time_dict={k:[0]*days for k in phys_mins}
     #backlog for each doctor
     doc_lines={key:0 for key in phys_mins.keys()}
+    print(doc_lines)
     # number of urgent patients not seen same day
     urgent_patients_missed = 0 #CALCULATE URGENT PATIENTS TOTAL
     # ADD PATIENT WAITING CUTTOFFS AND TOTAL CUTTOFFS. STOP SIM? OR JUST ALERT    
     
     #get matrix of demand for each patient class (cols) each day (rows)
-    demand_matrix=np.random.binomial(nums, freqs, (days, num_classes*3))
+    demand_matrix=np.random.binomial(nums, freqs, (days, num_classes))
     #get daily demands
-    daily_demands=np.sum(demand_matrix, axis=1)
+    ##daily_demands=np.sum(demand_matrix, axis=1)
     #initialize daily supplies
     daily_supplys=[0]*days
     
@@ -64,10 +65,10 @@ def mat_sim(cut_off=0, carve_out=True, days, freqs, durs,  nums, num_classes, nu
         
         #if using carve outs, set aside time for the day by initializing carve out slots
         if carve_out:
-            curr_carve_out=phys_carve_out.copy()
+            curr_carve_out={}  ##phys_carve_out.copy()
         
         # get randomized list of patient classes calling in today, in order of call        
-        new_patients=np.repeat(range(0,num_classes*3),day).tolist()
+        new_patients=np.repeat(range(0,num_classes),day).tolist()
        
         wait_times=[]
         #go thru patients arriving, schedule them
@@ -80,7 +81,9 @@ def mat_sim(cut_off=0, carve_out=True, days, freqs, durs,  nums, num_classes, nu
             if patient in shared_categories:
                 #build dictionary of doctors and the length of their queue (in days, so relative to hours worked per day)                
                     #pass relative wait function v=minutes in backlog, and phys_mins[k]=mins worked per day by physician k
-                doc_backlogs={k:relative_wait(v, phys_mins[k]) for k,v in doc_lines}
+                print(doc_lines)
+                doc_backlogs={k:relative_wait(v, phys_mins[k]) for k,v in doc_lines.items()}
+                print(doc_lines)
                 #take doc with smallest number of days in backlog                
                 relevant_doc = min(doc_backlogs.keys(), key=(lambda key: doc_backlogs[key]))
             
@@ -125,7 +128,7 @@ def mat_sim(cut_off=0, carve_out=True, days, freqs, durs,  nums, num_classes, nu
                         waited[wait_time, patient] +=1
                     #try to add to daily demand list, unless patient is scheduled outside timeframe
                     try:
-                        daily_supplys[ind+wait_time] +=1
+                        daily_supplys[int(ind)+int(wait_time)] +=1
                     except IndexError:
                         pass
             wait_times.append(wait_time)

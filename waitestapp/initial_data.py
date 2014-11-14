@@ -7,11 +7,11 @@ Created on Fri Nov  7 19:10:08 2014
 #
 #CHECKING MECHANISM FOR NUMBERS, MAKE SURE THEY ARE SENSIBLE
 
-capacity_json = [{"Provider_Name":"Doctor 1","Hours_Per_Day":"8","Days_Per_Year":"48","Position":"Physician","Team":"Team A"},
-                 {"Provider_Name":"Doctor 2","Hours_Per_Day":"8","Days_Per_Year":"48","Position":"Physician","Team":"Team A"},
-                 {"Provider_Name":"Doctor 3","Hours_Per_Day":"8","Days_Per_Year":"50","Position":"Physician","Team":"Team B"},
-                 {"Provider_Name":"Nurse 1","Hours_Per_Day":"8","Days_Per_Year":"50","Position":"Nurse Practitioner","Team":"Team B"},
-                 {"Provider_Name":"Assist. 1","Hours_Per_Day":"8","Days_Per_Year":"50","Position":"Physician Assistant","Team":"Team A"}]                 
+capacity_json = [{"Provider_Name":"Doctor 1","Hours_Per_Day":"8","Days_Per_Year":"340","Position":"Physician","Team":"Team A"},
+                 {"Provider_Name":"Doctor 2","Hours_Per_Day":"8","Days_Per_Year":"340","Position":"Physician","Team":"Team A"},
+                 {"Provider_Name":"Doctor 3","Hours_Per_Day":"8","Days_Per_Year":"340","Position":"Physician","Team":"Team B"},
+                 {"Provider_Name":"Nurse 1","Hours_Per_Day":"8","Days_Per_Year":"340","Position":"Nurse Practitioner","Team":"Team B"},
+                 {"Provider_Name":"Assist. 1","Hours_Per_Day":"8","Days_Per_Year":"340","Position":"Physician Assistant","Team":"Team A"}]                 
                  
 aff_json = [{"Provider":"Doctor 1","Patient":"Patient A"},
             {"Provider":"Doctor 1","Patient":"Patient B"},
@@ -25,9 +25,9 @@ attr_json = [{"Physician":"Doctor 1", "Males":"900", "Females":"900", "Panel_Siz
              {"Physician":"Doctor 3", "Males":"900", "Females":"900", "Panel_Size":"1800"}]
 
 
-cont_json = [{"Rule":"Gender:M AND Age_Range:0-24 AND Visit_Type:Acute"},{"Continuity":"Do Not Share"}]                 
+cont_json = [{"Rule":"Gender:M AND Age:0-24 AND Visit:Acute","Continuity":"Share"}]                 
 
-del_json = [{"Rule":"Gender:F AND Age_Range:0-24 AND Visit_Type:Acute"}, {"Delegation":"Nurse 1"}]
+del_json = [{"Rule":"Gender:F AND Age:0-24 AND Visit:Acute","Delegation":"Nurse 1"}]
 
 pat_json = [{"Patient_Name":"Patient A","Patient_Gender":"M","Age":"24","Chronic_Conditions":"0"},
             {"Patient_Name":"Patient B","Patient_Gender":"F","Age":"58","Chronic_Conditions":"2"},
@@ -182,7 +182,7 @@ freq_dict = {(1, 3, 2, 1): 0.0043971155659202482,
  (1, 3, 2, 2): 0.002970127118112168,
  (2, 5, 0, 3): 0.0055948326272175879}
  
-dur_dict = {(1, 3, 2, 1): 20.513207547169813,
+durs_dict = {(1, 3, 2, 1): 20.513207547169813,
  (1, 4, 0, 2): 19.707920792079207,
  (2, 3, 2, 3): 22.509090909090908,
  (1, 6, 1, 3): 18.810578105781058,
@@ -346,7 +346,7 @@ def dict_sum(stats):
             
     return (sum_acutes/num_acutes, sum_prev/num_prev, sum_chronic/num_chronic)
     
-avg_durs = dict_sum(dur_dict)
+avg_durs = dict_sum(durs_dict)
 avg_freqs = dict_sum(freq_dict)
 
 male_cats = ['2,1,0',

@@ -275,15 +275,15 @@ $('.submitPrev').click(function(e) {
 	table  = JSON.stringify(table);
 	var patTable =  $('#patTable').tableToJSON({ ignoreColumns: [0], ignoreHiddenRows: true });
 	patTable  = JSON.stringify(patTable);
-	alert(table);
-	alert(patTable);
+	//alert(table);
+	//alert(patTable);
 	//stick stringified JSON of table into hidden form and submit	
 	$.ajax({      
 	  url: "?",
 	  type: "POST",
       data : {'id_table': table, 'patTable':patTable},       
       success: function() {
-	   alert("data recieved!");
+	   //alert("data recieved!");
        $( "#prevPage" )[0].click();   
       }
     });
@@ -297,15 +297,15 @@ $('.submitCatch').click(function(e) {
 	table  = JSON.stringify(table);
 	var patTable =  $('#patTable').tableToJSON({ ignoreColumns: [0], ignoreHiddenRows: true });
 	patTable  = JSON.stringify(patTable);
-	alert(table);
-	alert(patTable);
+	//alert(table);
+	//alert(patTable);
 	//stick stringified JSON of table into hidden form and submit	
 	$.ajax({      
 	  url: "?",
 	  type: "POST",
       data : {'id_table': table, 'patTable':patTable},       
       success: function() {
-	   alert("data recieved!");
+	   //alert("data recieved!");
        $( "#nextPage" )[0].click();   
       }
     });
@@ -319,14 +319,14 @@ $('#addPanel').click(function () {
     jQuery.each( fields, function( i, field ) {
       row = row + ( "<td>" + field.value + "</td>" );
     });
-	alert(row);
+	//alert(row);
 	// compute full panel size from number of males and females
 	var panelSize = parseInt(fields[1].value, 10) + parseInt(fields[2].value, 10)
-	alert(parseInt(fields[1].value, 10));
-	alert(parseInt(fields[2].value, 10));
+	//alert(parseInt(fields[1].value, 10));
+	//alert(parseInt(fields[2].value, 10));
 	
 	row =  row + ("<td>" + panelSize + "</td>"  +"</tr>")
-	alert(row);
+	//alert(row);
 	
 	$('#panelTable').bootstrapTable('destroy')
 	$('#panelTable').append(row);

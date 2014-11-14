@@ -35,7 +35,7 @@
 			</form>
 			<br>
 			<div style="padding-left:25px;">
-				<label> Overall estimated wait time: <span id="overallTime">N/A</span></label>
+				<label> Overall estimated wait time: <span id="overallTime">N/A</span>&nbsp; days</label>
 				<br><br>
 				<div id="border1" style="border:1px solid black;  padding:30px;">
 					<span><strong> For patient with </strong>
@@ -357,7 +357,8 @@ $( document ).ready(function() {
 		  url: "?",
 		  type: "POST",
 		  data : {'type': 'rowselect', 'doc': doc, 'age': row, 'chron': chron_cond, 'gender':gender, 'visit':visit, 'perc':perc},       
-		  success: function(data) {	   
+		  success: function(data) {	
+			//alert(data.exp);
 		   $(waitid).text(data.exp);  
 		   $(percid).text(data.p);
 		  }
@@ -389,7 +390,7 @@ $('.rowSelect').on('change', function() {
 	  url: "?",
 	  type: "POST",
 	  data : {'type': 'rowselect', 'doc': doc, 'age': row, 'chron': chron_cond, 'gender':gender, 'visit':visit, 'perc':perc},       
-	  success: function() {	   
+	  success: function(data) {	   
 	   $(waitid).text(data.exp);  
 	   $(percid).text(data.p);
 	  }
