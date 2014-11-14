@@ -89,8 +89,8 @@
 										<option>Chronic</option>
 									</select>
 								</td>
-								<td><div id="wait1">N/A</div></td>
-								<td><div id="percentile1">N/A</div></td>
+								<td><div id="wait1" style="text-align:center;">N/A</div></td>
+								<td><div id="percentile1" style="text-align:center;">N/A</div></td>
 							</tr>
 							<tr class="row" title="rowSelect age2">
 								<td>
@@ -107,8 +107,8 @@
 										<option>Chronic</option>
 									</select>
 								</td>
-								<td><div id="wait2">N/A</div></td>
-								<td><div id="percentile2">N/A</div></td>
+								<td><div id="wait2" style="text-align:center;">N/A</div></td>
+								<td><div id="percentile2" style="text-align:center;">N/A</div></td>
 							</tr>
 							<tr class="row" title="rowSelect age3">
 								<td>
@@ -125,8 +125,8 @@
 										<option>Chronic</option>
 									</select>
 								</td>
-								<td><div id="wait3">N/A</div></td>
-								<td><div id="percentile3">N/A</div></td>
+								<td><div id="wait3" style="text-align:center;">N/A</div></td>
+								<td><div id="percentile3" style="text-align:center;">N/A</div></td>
 							</tr>
 							<tr class="row" title="rowSelect age4">
 								<td>
@@ -143,8 +143,8 @@
 										<option>Chronic</option>
 									</select>
 								</td>
-								<td><div id="wait4">N/A</div></td>
-								<td><div id="percentile4">N/A</div></td>
+								<td><div id="wait4" style="text-align:center;">N/A</div></td>
+								<td><div id="percentile4" style="text-align:center;">N/A</div></td>
 							</tr>
 							<tr class="row" title="rowSelect age5">
 								<td>
@@ -161,8 +161,8 @@
 										<option>Chronic</option>
 									</select>
 								</td>
-								<td><div id="wait5">N/A</div></td>
-								<td><div id="percentile5">N/A</div></td>
+								<td><div id="wait5" style="text-align:center;">N/A</div></td>
+								<td><div id="percentile5" style="text-align:center;">N/A</div></td>
 							</tr>	
 							<tr class="row" title="rowSelect age6">
 								<td>
@@ -179,8 +179,8 @@
 										<option>Chronic</option>
 									</select>
 								</td>
-								<td><div id="wait6">N/A</div></td>
-								<td><div id="percentile6">N/A</div></td>
+								<td><div id="wait6" style="text-align:center;">N/A</div></td>
+								<td><div id="percentile6" style="text-align:center;">N/A</div></td>
 							</tr>	
 							</tbody>
 						</table>
@@ -240,8 +240,8 @@
 					<td>
 					<button id="query" style="height:30px; line-height:25px;">Submit Query</button>
 					</td>
-					<td><div id="queryEst">N/A</div></td>
-					<td><div id="queryPerc">N/A</div></td>
+					<td><div id="queryEst" style="text-align:center;">N/A</div></td>
+					<td><div id="queryPerc" style="text-align:center;">N/A</div></td>
 				  </tr>
 				 </table>
 			</div>
@@ -516,7 +516,7 @@ $('#query').click( function() {
 				return $(this).val();}).get();	
 	var gender = qParams.toString().split(",")[0]	
 	var chron_cond = qParams.toString().split(",")[2]
-	var visit = params.toString().split(",")[3]
+	var visit = qParams.toString().split(",")[3]
 	$.ajax({      		
 		  url: "?",
 		  type: "POST",
@@ -536,7 +536,7 @@ $('.queryColSelect').on('change', function() {
 				return $(this).val();}).get();	
 	var gender = qParams.toString().split(",")[0]	
 	var chron_cond = qParams.toString().split(",")[2]
-	var visit = params.toString().split(",")[3]
+	var visit = qParams.toString().split(",")[3]
 	$.ajax({      		
 		  url: "?",
 		  type: "POST",

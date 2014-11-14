@@ -24,6 +24,7 @@
 			<p>Enter information about each staff member below, or upload as file:</p>
 			
 			<!-- Provider Addition Widget -->
+			<!-- Provider Addition Widget -->
 			<div style="display:table;">
 				<div style="display: table-row;">
 					<div class="bs-example" style="display: table-cell;">
@@ -169,8 +170,7 @@ $('#provTable').bootstrapTable({
 	striped: true,
 	pagination: true,
 	pageSize: 50,
-	pageList: [10, 25, 50, 100, 200],
-		
+	pageList: [10, 25, 50, 100, 200],	
 	clickToSelect: true,
 });
 
@@ -227,14 +227,14 @@ $('.submitCatch').click(function(e) {
 	e.preventDefault(); //don't follow link yet
 	var table = $('#provTable').tableToJSON({ ignoreColumns: [0], ignoreHiddenRows: false });
 	table  = JSON.stringify(table);
-	alert(table);
+	//alert(table);
 	//stick stringified JSON of table into hidden form and submit	
 	$.ajax({      
 	  url: "?",
 	  type: "POST",
       data : {'id_table': table},       
       success: function() {
-	   alert("data recieved!");
+	   //alert("data recieved!");
        $( "#nextPage" )[0].click();   
       }
     });

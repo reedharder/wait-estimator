@@ -25,7 +25,7 @@
 			<p>Enter rules for patient delegation to non-physician providers:</p>
 			<br>
 			<!-- Rule Form -->
-			<div id="errors"></div>
+		<div id="errors"></div>
 			<form>
 				<div style="padding-bottom:10px;">
 					<input class="Check"  type="checkbox" name="gender" value="Gender"> &nbsp;Gender:
@@ -35,21 +35,21 @@
 					</select>
 				</div>
 				<div style="padding-bottom:10px;">
-					<input class="Check"  type="checkbox" name="agerange" value="Age Range"> &nbsp;Age Range: &nbsp;
+					<input class="Check"  type="checkbox" name="agerange" value="Age"> &nbsp;Age Range: &nbsp;
 					<input class="rule-form" type="text" placeholder="0-100" name="agerange-rule" id="agerange-rule" style="max-width:45px;">
 				</div>
 				<div style="padding-bottom:10px;">
-					<input class="Check"  type="checkbox" name="condrange" value="# Chronic Conditions"> &nbsp; # Conditions:
+					<input class="Check"  type="checkbox" name="condrange" value="Chronic"> &nbsp; # Conditions:
 					<input class="rule-form" type="text" placeholder="0-100" name="condrange-rule" id="condrange-rule" style="max-width:45px;">
 				</div>
 				<div style="padding-bottom:10px;">
-					<input class="Check"  type="checkbox" name="visit" value="Visit Type"> &nbsp; Visit Type:
+					<input class="Check"  type="checkbox" name="visit" value="Visit"> &nbsp; Visit Type:
 					<select  class="rule-form" style="max-width:80px;" name="visit-rule">
 						<option>Acute</option>
 						<option>Preventative</option>
 						<option>Chronic</option>
 					</select>
-				</div>				
+				</div>
 				<div style="padding-bottom:10px;">
 					<input class="Check" type="checkbox" name="patient" value="Patient"> &nbsp; Patient Name:
 					<input class="rule-form" type="text" placeholder="Enter Patient Name" name="patient-rule" id="patient-rule" style="width:150px;">
@@ -57,7 +57,7 @@
 				<div style="padding-bottom:10px;">
 					&nbsp; Delegation:					
 					<select class="rule" style="width:100px;" name="continuity-rule">
-						{% for nonphys in nonphys_list &}
+						{% for nonphys in nonphys_list %}
 						<option>{{nonphys}}</option>
 						{% endfor %}
 					</select>
@@ -100,7 +100,7 @@
 			</tr>
 		</thead>
 		<tbody>
-		{% for row in data_table %}
+		{% for row in table_data %}
 		<tr>
 			<td></td>
 			<td>{{row.Rule}}</td>
@@ -154,7 +154,7 @@ $(document).ready( function() {
 //set table properties
 $('#delRuleTable').bootstrapTable({
     cache: false,	
-	height: 400,
+	//height: 400,
 	striped: true,
 	pagination: true,
 	pageSize: 50,
@@ -214,14 +214,14 @@ $('.submitPrev').click(function(e) {
 	e.preventDefault(); //don't follow link yet
 	var table = $('#delRuleTable').tableToJSON({ ignoreColumns: [0], ignoreHiddenRows: false });
 	table  = JSON.stringify(table);
-	alert(table);
+	//alert(table);
 	//stick stringified JSON of table into hidden form and submit	
 	$.ajax({      
 	  url: "?",
 	  type: "POST",
       data : {'id_table': table},       
       success: function() {
-	   alert("data recieved!");
+	   //alert("data recieved!");
        $( "#prevPage" )[0].click();   
       }
     });
@@ -233,20 +233,20 @@ $('.submitCatch').click(function(e) {
 	e.preventDefault(); //don't follow link yet
 	var table = $('#delRuleTable').tableToJSON({ ignoreColumns: [0], ignoreHiddenRows: false });
 	table  = JSON.stringify(table);
-	alert(table);
+	//alert(table);
 	//stick stringified JSON of table into hidden form and submit	
 	$.ajax({      
 	  url: "?",
 	  type: "POST",
       data : {'id_table': table},       
       success: function() {
-	   alert("data recieved!");
+	   //alert("data recieved!");
        $( "#nextPage" )[0].click();   
       }
     });
 });
 
-
+/*
 //catch page change, convert table data to json, submit to hidden form, then change page
 $('.submitCatch').click(function(e) {
 	e.preventDefault(); //don't follow link yet
@@ -274,7 +274,7 @@ $('.submitPrev').click(function(e) {
       }
     });    
 });
-
+*/
 
 //add to table with addContRule button
 $('#addDelRule').click(function () {
@@ -327,7 +327,7 @@ $('#addDelRule').click(function () {
 		$('#delRuleTable').append(row);
 		$('#delRuleTable').bootstrapTable({
 			cache: false,
-			height: 400,
+			//height: 400,
 			striped: true,
 			pagination: true,
 			pageSize: 50,
